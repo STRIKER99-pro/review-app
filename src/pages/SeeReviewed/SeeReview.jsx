@@ -15,7 +15,6 @@ const SeeReview = () => {
 
         <div className="review-container">
           <div className="review-content">
-            <div className="review-"></div>
             <div className="review-item">
               <span className="review-label">Name:</span>
               <span className="review-value"> Mira Fashion</span>
