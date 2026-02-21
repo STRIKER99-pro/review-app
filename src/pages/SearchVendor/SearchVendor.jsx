@@ -12,6 +12,7 @@ const SearchVendor = () =>{
   const [showDropDown, setShowDropDown] = useState(false);
   const [showCreateModel, setShowCreateModel] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null);
+  const [searchContent, setSearchContent] = useState(false);
 
   const [filteredResults, setFilteredResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -19,39 +20,42 @@ const SearchVendor = () =>{
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
 
-  const vendorNumbers = [
-    {
-      id: 1,
-      phoneNumber: "680752477",
-      name: "Mira Fashion",
-      rating: 4.5,
-      reviews: 32,
-    },
-    {
-      id: 2,
-      phoneNumber: "686752477",
-      name: "Luxury Fashion",
-      rating: 4,
-      reviews: 23,
-    },
-    {
-      id: 3,
-      phoneNumber: "680755477",
-      name: "Jewery Fashion",
-      rating: 3,
-      reviews: 15,
-    },
-  ];
+  
+    const vendorNumbers = [
+      {
+        id: 1,
+        phoneNumber: "680752477",
+        name: "Mira Fashion",
+        rating: 4.5,
+        reviews: 32,
+      },
+      {
+        id: 2,
+        phoneNumber: "686752477",
+        name: "Luxury Fashion",
+        rating: 4,
+        reviews: 23,
+      },
+      {
+        id: 3,
+        phoneNumber: "680755477",
+        name: "Jewery Fashion",
+        rating: 3,
+        reviews: 15,
+      },
+    ];
 
-  const categories = [
-    { id: 1, name: "Luxury Fashion", rating: 4 },
-    { id: 2, name: "Jewelry Store", rating: 2 },
-    { id: 3, name: "Watch Shop", rating: 3 },
-    { id: 4, name: "Handbag Boutiques", rating: 2.5 },
-    { id: 5, name: "Baby Clothing", rating: 4.5 },
-    { id: 6, name: "Kids Fashion", rating: 1 },
-    { id: 7, name: "Sport Wear", rating: 1.5 },
-  ];
+    const categories = [
+      { id: 1, name: "Luxury Fashion", rating: 4 },
+      { id: 2, name: "Jewelry Store", rating: 2 },
+      { id: 3, name: "Watch Shop", rating: 3 },
+      { id: 4, name: "Handbag Boutiques", rating: 2.5 },
+      { id: 5, name: "Baby Clothing", rating: 4.5 },
+      { id: 6, name: "Kids Fashion", rating: 1 },
+      { id: 7, name: "Sport Wear", rating: 1.5 },
+    ];
+  
+  
 
   const handleCreateVendor = () => {
     setShowCreateModel(false);
@@ -78,7 +82,7 @@ const SearchVendor = () =>{
     }
 
     if (searchType === "vendor") {
-      const vendor = vendorNumbers.find((v) => v.phone === searchQuery);
+      const vendor = vendorNumbers.find((v) => v.phoneNumber === searchQuery);
       if (vendor) {
         navigate(`/SeeReview/${vendor.id}`, { state: { vendor } });
       } else {
@@ -151,15 +155,17 @@ const SearchVendor = () =>{
 
     if(!searchQuery.trim()) {
       console.log("enpty search");
+      setSearchContent(false)
       if (searchType === 'vendor') {
-        setFilteredResults(vendorNumbers.slice(0, 10))
+        setFilteredResults(vendorNumbers)
       } else {
-        setFilteredResults(categories.slice(0, 10))
+        setFilteredResults(categories)
       }
       setSelectedIndex(-1);
       return;
     }
 
+    setSearchContent(true)
     const query = searchQuery.toLowerCase().trim();
     if(searchType === 'vendor') {
       console.log("filtering vendors");
@@ -213,6 +219,7 @@ const SearchVendor = () =>{
       case "Escape":
         setFilteredResults([]);
         setSelectedIndex(-1);
+        break;
     }
   };
 
@@ -246,34 +253,14 @@ const SearchVendor = () =>{
     }
   };
 
+  const handeSearchContent  = (e) => {
+    const value = e.target.value
+    setSearchQuery(value)
+  };
+
   return (
     // input-form
     <div className="review-card">
-      <Toaster position="top-center" />
-      {showCreateModel && (
-        <div className="model-overlay">
-          <div className="model-content">
-            <h3>Vendor Not Found</h3>
-            <p>
-              No vendor found with number:{" "}
-              <strong>{selectedVendor?.phoneNumber}</strong>
-            </p>
-            <p>would you like to create a new vendor profile?</p>
-            <div className="model-action">
-              <button
-                className="btn-secondary"
-                onClick={() => setShowCreateModel(false)}
-              >
-                Cancel
-              </button>
-              <button className="btn-primary" onClick={handleCreateVendor}>
-                Create Vendor
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div>
         <div className="brand-header">
           <div className="brand-title">
@@ -297,7 +284,7 @@ const SearchVendor = () =>{
             </button>
 
             <input
-            ref={inputRef}
+              ref={inputRef}
               type={searchType === "vendor" ? "number" : "/^[A-Za-z]*$/"}
               className="search-vendor"
               placeholder={
@@ -306,7 +293,7 @@ const SearchVendor = () =>{
                   : "Enter product type"
               }
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handeSearchContent}
               onKeyDown={handleKeyDown}
               autoFocus
             />
@@ -346,10 +333,8 @@ const SearchVendor = () =>{
           )}
         </form>
 
-
-
         {/* filtered result */}
-        {filteredResults.length > 0 && searchQuery.trim() && (
+        {searchContent && filteredResults.length > 0 && searchQuery.trim() && (
           <div className="live-results" ref={resultsRef}>
             <div className="results-header">
               <span className="results-count">
@@ -362,6 +347,8 @@ const SearchVendor = () =>{
               <div
                 key={item.id}
                 className={`result-item ${index === selectedIndex ? "selected" : ""}`}
+                // onClick={handleItemClick(item)}
+                // onMouseEnter={setSelectedIndex(index)}
               >
                 {searchType === "vendor" ? (
                   <>
@@ -383,7 +370,7 @@ const SearchVendor = () =>{
                     <div className="contact-icon">
                       <MdCategory />
                     </div>
-                    <div className="result-infor">
+                    <div className="result-info">
                       <div className="result-primary">
                         <span className="result-name">{item.name}</span>
                       </div>
@@ -398,7 +385,42 @@ const SearchVendor = () =>{
           </div>
         )}
 
+        <Toaster position="bottom-center" />
+        {showCreateModel && (
+          <div className="model-overlay">
+            <div className="model-content">
+              <h3>Vendor Not Found</h3>
+              <p>
+                No vendor found with number:{" "}
+                <strong>{selectedVendor?.phoneNumber}</strong>
+              </p>
+              <p>would you like to create a new vendor profile?</p>
+              <div className="model-action">
+                <button
+                  className="btn-secondary"
+                  onClick={() => setShowCreateModel(false)}
+                >
+                  Cancel
+                </button>
+                <button className="btn-primary" onClick={handleCreateVendor}>
+                  Create Vendor
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {searchContent && searchQuery.trim() && filteredResults.length === 0 && (
+          <div className="no-results">
+            <p>
+              No {searchType === "vendor" ? "vendors" : "categories"} found
+              matching "{searchQuery}"
+            </p>
+          </div>
+        )}
+
         {/* handle search */}
+        {!searchContent && (
         <div className="review-search">
           {searchType === "vendor" ? (
             // contact list
@@ -418,7 +440,7 @@ const SearchVendor = () =>{
                     {vendor.phoneNumber}
                   </div>
                   <div className="vendor-info">
-                    <span className="vendor-reviews">{vendor.name}</span>
+                    <span className="vendor-name">{vendor.name}</span>
                   </div>
                   {/* star reviews */}
                   <div className="star-icon">{renderStars(vendor.rating)}</div>
@@ -436,20 +458,21 @@ const SearchVendor = () =>{
                 <div
                   key={category.id}
                   className="review-contact clickable"
-                  onClick={() => handleItemClick(categories)}
+                  onClick={() => handleItemClick(category)}
                 >
                   <div className="review-numbers">
                     <MdCategory className="contact-icon" />
-                    {categories.name}
+                    {category.name}
                   </div>
                   <div className="star-icon">
-                    {renderStars(categories.rating)}
+                    {renderStars(category.rating)}
                   </div>
                 </div>
               ))}
             </div>
           )}
         </div>
+        )}
       </div>
       <div className="copyright-footer">
         <div>About us</div>
