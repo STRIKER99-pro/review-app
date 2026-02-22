@@ -20,8 +20,15 @@ const SearchVendor = () =>{
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
 
-  
-    const vendorNumbers = [
+  const [vendorNumbers, setVendorNumbers] = useState([]);
+
+
+  useEffect(() => {
+    const storedVendors = JSON.parse(
+      localStorage.getItem("vendorNumbers") || "[]",
+    );
+
+    const defualtVendors = [
       {
         id: 1,
         phoneNumber: "680752477",
@@ -45,6 +52,18 @@ const SearchVendor = () =>{
       },
     ];
 
+    const formattedStoredVendors = storedVendors.map((vendor) => ({
+      id: vendor.id,
+      phoneNumber: vendor.phoneNumber.toString(),
+      name: vendor.businessName,
+      rating: 0,
+      reviews: 0,
+    }));
+
+    setVendorNumbers([...defualtVendors, ...formattedStoredVendors]);
+  }, []);
+
+
     const categories = [
       { id: 1, name: "Luxury Fashion", rating: 4 },
       { id: 2, name: "Jewelry Store", rating: 2 },
@@ -62,8 +81,10 @@ const SearchVendor = () =>{
     navigate("/CreateVendor", {
       state: { phoneNumber: selectedVendor.phoneNumber },
     });
-    toast.success("let create your vendor profile");
+    toast.success("Let create your vendor profile");
   };
+
+
   const handleItemClick = (item) => {
     if (searchType === "vendor") {
       navigate("/SeeReview", { state: { vendor: item } });
@@ -71,6 +92,7 @@ const SearchVendor = () =>{
       navigate(`/category/${item.id}`, { state: { category: item } });
     }
   };
+
 
   const HandleSearch = (e) => {
     e.preventDefault();
@@ -82,7 +104,7 @@ const SearchVendor = () =>{
     }
 
     if (searchType === "vendor") {
-      const vendor = vendorNumbers.find((v) => v.phoneNumber === searchQuery);
+      const vendor = vendorNumbers.find((vendor) => vendor.phoneNumber === searchQuery);
       if (vendor) {
         navigate(`/SeeReview/${vendor.id}`, { state: { vendor } });
       } else {
@@ -186,7 +208,7 @@ const SearchVendor = () =>{
       setFilteredResults(filtered);
     }
     setSelectedIndex(-1);
-  }, [searchQuery, searchType])
+  }, [searchQuery, searchType, vendorNumbers])
 
 
 
@@ -385,93 +407,95 @@ const SearchVendor = () =>{
           </div>
         )}
 
-        <Toaster position="bottom-center" />
-        {showCreateModel && (
-          <div className="model-overlay">
-            <div className="model-content">
-              <h3>Vendor Not Found</h3>
-              <p>
-                No vendor found with number:{" "}
-                <strong>{selectedVendor?.phoneNumber}</strong>
-              </p>
-              <p>would you like to create a new vendor profile?</p>
-              <div className="model-action">
-                <button
-                  className="btn-secondary"
-                  onClick={() => setShowCreateModel(false)}
-                >
-                  Cancel
-                </button>
-                <button className="btn-primary" onClick={handleCreateVendor}>
-                  Create Vendor
-                </button>
-              </div>
+        {searchContent &&
+          searchQuery.trim() &&
+          filteredResults.length === 0 && (
+            <div className="no-results">
+              <Toaster position="bottom-center" />
+              {showCreateModel && (
+                <div className="model-overlay">
+                  <div className="model-content">
+                    <h3>Vendor Not Found</h3>
+                    <p>
+                      No vendor found with number:{" "}
+                      <strong>{selectedVendor?.phoneNumber}</strong>
+                    </p>
+                    <p>would you like to create a new vendor profile?</p>
+                    <div className="model-action">
+                      <button
+                        className="btn-secondary"
+                        onClick={() => setShowCreateModel(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="btn-primary"
+                        onClick={handleCreateVendor}
+                      >
+                        Create Vendor
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-
-        {searchContent && searchQuery.trim() && filteredResults.length === 0 && (
-          <div className="no-results">
-            <p>
-              No {searchType === "vendor" ? "vendors" : "categories"} found
-              matching "{searchQuery}"
-            </p>
-          </div>
-        )}
+          )}
 
         {/* handle search */}
         {!searchContent && (
-        <div className="review-search">
-          {searchType === "vendor" ? (
-            // contact list
+          <div className="review-search">
+            {searchType === "vendor" ? (
+              // contact list
 
-            <div className="review-contact-container">
-              <h3 className="section-title">
-                <FaUserPlus /> Top Vendors
-              </h3>
-              {vendorNumbers.map((vendor) => (
-                <div
-                  key={vendor.id}
-                  className="review-contact clickable"
-                  onClick={() => handleItemClick(vendor)}
-                >
-                  <div className="review-numbers">
-                    <FaWhatsapp className="contact-icon" />
-                    {vendor.phoneNumber}
+              <div className="review-contact-container">
+                <h3 className="section-title">
+                  <FaUserPlus /> Top Vendors
+                </h3>
+                {vendorNumbers.map((vendor) => (
+                  <div
+                    key={vendor.id}
+                    className="review-contact clickable"
+                    onClick={() => handleItemClick(vendor)}
+                  >
+                    <div className="review-numbers">
+                      <FaWhatsapp className="contact-icon" />
+                      {vendor.phoneNumber}
+                    </div>
+                    <div className="vendor-info">
+                      <span className="vendor-name">{vendor.name}</span>
+                    </div>
+                    {/* star reviews */}
+                    <div className="star-icon">
+                      {renderStars(vendor.rating)}
+                    </div>
                   </div>
-                  <div className="vendor-info">
-                    <span className="vendor-name">{vendor.name}</span>
-                  </div>
-                  {/* star reviews */}
-                  <div className="star-icon">{renderStars(vendor.rating)}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            // category list
+                ))}
+              </div>
+            ) : (
+              // category list
 
-            <div className="categories-list">
-              <h3 className="section-title">
-                <MdCategory /> Shop Categories
-              </h3>
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="review-contact clickable"
-                  onClick={() => handleItemClick(category)}
-                >
-                  <div className="review-numbers">
-                    <MdCategory className="contact-icon" />
-                    {category.name}
+              <div className="categories-list">
+                <h3 className="section-title">
+                  <MdCategory /> Shop Categories
+                </h3>
+                {categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="review-contact clickable"
+                    onClick={() => handleItemClick(category)}
+                  >
+                    <div className="review-numbers">
+                      <MdCategory className="contact-icon" />
+                      {category.name}
+                    </div>
+                    <div className="star-icon">
+                      {renderStars(category.rating)}
+                    </div>
                   </div>
-                  <div className="star-icon">
-                    {renderStars(category.rating)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
       <div className="copyright-footer">
