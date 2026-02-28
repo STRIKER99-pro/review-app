@@ -289,7 +289,7 @@ const SearchVendor = () =>{
             ReviewIt <span>Trust</span>
           </div>
           <div className="tagline">
-            <i className="fa fa-clipboard-check">Check before you buy</i>
+            <i className="clipboard-check">Check before you buy</i>
           </div>
         </div>
 
@@ -321,7 +321,7 @@ const SearchVendor = () =>{
             />
 
             {/* action button */}
-            <button type="submit" className="action">
+            <button type="submit" className="action-btn">
               {searchType === "vendor" ? (
                 <FaUserPlus />
               ) : (
