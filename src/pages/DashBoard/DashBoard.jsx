@@ -111,13 +111,13 @@ const DashBoard = () => {
           </NavLink>
 
           <NavLink
-            to="/search"
+            to="/CreateVendor"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
             onClick={handleContentClick}
           >
-            <FaSearch /> <span>Search</span>
+            <FaPlus /> <span>Create Vendor</span>
           </NavLink>
 
           {currentUser && (
@@ -145,13 +145,13 @@ const DashBoard = () => {
           )}
 
           <NavLink
-            to="/categories"
+            to="/SeeReview"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
             onClick={handleContentClick}
           >
-            <FaList /> <span>Categories</span>
+            <FaList /> <span>See Reviews</span>
           </NavLink>
 
           {currentUser && (
