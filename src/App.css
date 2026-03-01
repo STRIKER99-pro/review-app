@@ -1113,26 +1113,3 @@ body {
     padding-top: 10px;
   }
 }
-/* Media Queries */
-@media (min-width: 1440px) {
-  .review-card {
-    min-width: 1400px;
-    min-height: 100vh;
-  }
-
-  .review-search {
-    max-height: 35vh;
-  }
-
-  .live-results {
-    max-height: 35vh;
-  }
-
-  .create-vendor {
-    margin-top: 20px;
-  }
-
-  .submit-content {
-    min-height: 40vh;
-  }
-}
