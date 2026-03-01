@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-
+import './CreateVendor.css';
 const CreateVendor = () => {
   const [formData, setForData] = useState({
       businessName: '',
@@ -181,7 +181,7 @@ const CreateVendor = () => {
                 cursor: submit ? "not-allowed" : "pointer",
               }}
             >
-              {submit ? "creating..." : "create"}
+              {submit ? "creating..." : "Create"}
             </button>
           </div>
         </form>

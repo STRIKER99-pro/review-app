@@ -1,4 +1,6 @@
 
+import './SearchVendor.css'
+
 import {useEffect, useState, useRef } from "react";
 import {useNavigate} from  "react-router-dom";
 import {FaWhatsapp, FaUserPlus, FaChevronDown, FaSearch, FaStar, FaRegStar, FaStarHalfAlt} from 'react-icons/fa';
@@ -126,7 +128,7 @@ const SearchVendor = () =>{
   const renderStars = (rating, type = "half") => {
     const stars = [];
     const fullStars = Math.floor(rating);
-    const hasHalf = rating % 1 !== 0;
+    const hasHalf = rating % 1 >= 0.5;
 
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
