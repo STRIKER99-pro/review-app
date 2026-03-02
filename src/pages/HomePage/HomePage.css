@@ -1,0 +1,869 @@
+/*HOME PAGE BASE STYLES */
+.home-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-y: auto;
+    height: 90vh;
+    scroll-behavior: smooth;
+}
+
+/* Header Section */
+.home-header {
+    margin-bottom: 20px;
+}
+
+.brand-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f2f5;
+}
+
+.brand-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sec-text-color);
+    line-height: 1.2;
+}
+
+.brand-title span {
+    background: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 40px;
+    margin-left: 10px;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+}
+
+.tagline {
+    color: #3c4a5c;
+    background: #eef1f6;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #f8fafd 0%, #f0f4fa 100%);
+    border-radius: 24px;
+    padding: 40px 30px;
+    margin: 20px 0 30px;
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--sec-text-color);
+}
+
+.hero-description strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 20px 30px;
+    border-radius: 60px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e6ed;
+    min-width: 200px;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+}
+
+.stat-icon.business {
+    color: var(--primary-color);
+}
+
+.stat-icon.reviews {
+    color: #f7b731;
+}
+
+.stat-icon.verified {
+    color: #10b981;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--sec-text-color);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Search Prompt */
+.search-prompt {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px 0;
+    border: 1px solid #e0e6ed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.prompt-header h2 {
+    font-size: 2rem;
+    color: var(--sec-text-color);
+    margin-bottom: 8px;
+}
+
+.prompt-header h2 span {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.prompt-header p {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+.search-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.search-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Vendors Section */
+.vendors-section {
+    margin: 40px 0;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    color: var(--sec-text-color);
+    margin-bottom: 25px;
+}
+
+.title-icon {
+    color: #f7b731;
+    font-size: 1.8rem;
+}
+
+.vendors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.vendor-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 25px;
+    background: white;
+    border: 1px solid #e0e6ed;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.vendor-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(8px);
+}
+
+.vendor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vendor-name {
+    font-weight: 600;
+    color: var(--sec-text-color);
+    font-size: 1.2rem;
+}
+
+.vendor-reviews {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.vendor-rating {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stars {
+    display: flex;
+    gap: 3px;
+}
+
+.star-filled {
+    color: #f7b731;
+    font-size: 1.2rem;
+}
+
+.star-half {
+    color: #f7b731;
+    font-size: 1.2rem;
+}
+
+.star-empty {
+    color: #d4dcec;
+    font-size: 1.2rem;
+}
+
+.rating-value {
+    font-weight: 600;
+    color: var(--sec-text-color);
+    min-width: 40px;
+    font-size: 1.1rem;
+}
+
+.view-all-btn {
+    background: none;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    width: auto;
+}
+
+.view-all-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Trust Badges */
+.trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 50px 0 30px;
+    padding: 25px 0;
+    border-top: 1px solid #e0e6ed;
+    border-bottom: 1px solid #e0e6ed;
+    flex-wrap: wrap;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--secondary-color);
+    font-size: 1rem;
+}
+
+.trust-icon {
+    font-size: 1.4rem;
+}
+
+.trust-icon.verified {
+    color: #10b981;
+}
+
+.trust-icon.secure {
+    color: var(--primary-color);
+}
+
+.trust-icon.whatsapp {
+    color: #25D366;
+}
+
+/* Footer */
+.copyright-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e6ed;
+    color: #8a99ae;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+/* Clickable class */
+.clickable {
+    cursor: pointer;
+}
+
+/* ===== LARGE DESKTOP (1280px and above) ===== */
+@media screen and (min-width: 1280px) {
+    .home-container {
+        max-width: 1200px;
+        padding: 30px;
+    }
+
+    .hero-section {
+        padding: 50px 40px;
+    }
+
+    .hero-description {
+        font-size: 1.3rem;
+    }
+
+    .stat-card {
+        padding: 25px 35px;
+        min-width: 220px;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .prompt-header h2 {
+        font-size: 2.2rem;
+    }
+
+    .vendor-card {
+        padding: 20px 30px;
+    }
+
+    .vendor-name {
+        font-size: 1.3rem;
+    }
+}
+
+/* ===== DESKTOP (1025px - 1279px) ===== */
+@media screen and (min-width: 1025px) and (max-width: 1279px) {
+    .home-container {
+        max-width: 1000px;
+        padding: 25px;
+    }
+
+    .hero-section {
+        padding: 40px 30px;
+    }
+
+    .stat-card {
+        padding: 18px 25px;
+        min-width: 180px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .vendor-card {
+        padding: 16px 22px;
+    }
+}
+
+/* ===== SMALL DESKTOP / LAPTOP (769px - 1024px) ===== */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .home-container {
+        max-width: 95%;
+        padding: 20px;
+    }
+
+    .hero-section {
+        padding: 30px 25px;
+    }
+
+    .hero-description {
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
+        gap: 20px;
+    }
+
+    .stat-card {
+        padding: 15px 20px;
+        min-width: 160px;
+        gap: 15px;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .search-prompt {
+        padding: 25px;
+    }
+
+    .prompt-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .prompt-header p {
+        font-size: 1rem;
+    }
+
+    .search-button {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+
+    .vendor-card {
+        padding: 15px 20px;
+    }
+
+    .vendor-name {
+        font-size: 1.1rem;
+    }
+
+    .stars .star-filled,
+    .stars .star-half,
+    .stars .star-empty {
+        font-size: 1.1rem;
+    }
+
+    .view-all-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+
+    .trust-badges {
+        gap: 30px;
+    }
+}
+
+/* ===== TABLET (481px - 768px) ===== */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .home-container {
+        padding: 15px;
+    }
+
+    .brand-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .brand-title {
+        font-size: 1.7rem;
+    }
+
+    .brand-title span {
+        font-size: 0.9rem;
+        padding: 3px 8px;
+    }
+
+    .tagline {
+        font-size: 0.85rem;
+    }
+
+    .hero-section {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .stats-grid {
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 12px 18px;
+        min-width: 140px;
+        gap: 12px;
+    }
+
+    .stat-icon {
+        font-size: 1.8rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .search-prompt {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .prompt-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .prompt-header p {
+        font-size: 0.95rem;
+    }
+
+    .search-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .vendors-section {
+        margin: 30px 0;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        gap: 8px;
+    }
+
+    .title-icon {
+        font-size: 1.5rem;
+    }
+
+    .vendor-card {
+        padding: 15px 18px;
+    }
+
+    .vendor-name {
+        font-size: 1rem;
+    }
+
+    .vendor-reviews {
+        font-size: 0.8rem;
+    }
+
+    .vendor-rating {
+        gap: 12px;
+    }
+
+    .stars {
+        gap: 2px;
+    }
+
+    .star-filled,
+    .star-half,
+    .star-empty {
+        font-size: 1rem;
+    }
+
+    .rating-value {
+        font-size: 1rem;
+        min-width: 35px;
+    }
+
+    .view-all-btn {
+        padding: 10px 22px;
+        font-size: 0.95rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .trust-badges {
+        gap: 20px;
+        padding: 20px 0;
+    }
+
+    .trust-item {
+        font-size: 0.9rem;
+        gap: 8px;
+    }
+
+    .trust-icon {
+        font-size: 1.2rem;
+    }
+
+    .copyright-footer {
+        font-size: 0.8rem;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+
+/* ===== MOBILE (0 - 480px) ===== */
+@media screen and (max-width: 480px) {
+    .home-container {
+        padding: 10px;
+    }
+
+    .brand-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .brand-title {
+        font-size: 1.5rem;
+    }
+
+    .brand-title span {
+        font-size: 0.8rem;
+        padding: 3px 7px;
+        margin-left: 5px;
+    }
+
+    .tagline {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+    }
+
+    .hero-section {
+        padding: 20px 15px;
+        border-radius: 16px;
+        margin: 10px 0 20px;
+    }
+
+    .hero-content {
+        margin-bottom: 20px;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .stats-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stat-card {
+        width: 100%;
+        max-width: 280px;
+        padding: 12px 15px;
+        justify-content: center;
+    }
+
+    .stat-icon {
+        font-size: 1.6rem;
+    }
+
+    .stat-number {
+        font-size: 1.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .search-prompt {
+        padding: 15px;
+        margin: 20px 0;
+    }
+
+    .prompt-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .prompt-header p {
+        font-size: 0.85rem;
+    }
+
+    .search-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .vendors-section {
+        margin: 25px 0;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .title-icon {
+        font-size: 1.3rem;
+    }
+
+    .vendor-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 15px;
+    }
+
+    .vendor-card:hover {
+        transform: translateX(3px);
+    }
+
+    .vendor-name {
+        font-size: 0.95rem;
+    }
+
+    .vendor-reviews {
+        font-size: 0.75rem;
+    }
+
+    .vendor-rating {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .stars {
+        gap: 2px;
+    }
+
+    .star-filled,
+    .star-half,
+    .star-empty {
+        font-size: 0.9rem;
+    }
+
+    .rating-value {
+        font-size: 0.9rem;
+        min-width: 30px;
+    }
+
+    .view-all-btn {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .trust-badges {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin: 30px 0 20px;
+        padding: 15px 0;
+    }
+
+    .trust-item {
+        font-size: 0.8rem;
+        gap: 8px;
+    }
+
+    .trust-icon {
+        font-size: 1.1rem;
+    }
+
+    .copyright-footer {
+        font-size: 0.7rem;
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 15px;
+    }
+}
+
+/* ===== EXTRA SMALL MOBILE (0 - 360px) ===== */
+@media screen and (max-width: 360px) {
+    .brand-title {
+        font-size: 1.3rem;
+    }
+
+    .brand-title span {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+
+    .hero-section {
+        padding: 15px 10px;
+    }
+
+    .hero-description {
+        font-size: 0.85rem;
+    }
+
+    .stat-card {
+        max-width: 240px;
+    }
+
+    .prompt-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .vendor-name {
+        font-size: 0.9rem;
+    }
+
+    .star-filled,
+    .star-half,
+    .star-empty {
+        font-size: 0.8rem;
+    }
+}

@@ -1,60 +1,60 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import "./CreateVendor.css";
 
-import { useState } from 'react';
-import './CreateVendor.css';
 const CreateVendor = () => {
-  const [formData, setForData] = useState({
-      businessName: '',
-      phoneNumber:  '',
-      category: ''
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    businessName: "",
+    phoneNumber: "",
+    category: "",
   });
 
-  
   const [submit, setSubmit] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSucces] = useState('');
+  const [error, setError] = useState({});
+  const [success, setSuccess] = useState("");
 
-  const handleCahange = (e) => {
-    const {name, value} = e.target;
-    setForData(prev => ({
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
-    if(error[name]) {
-      setError(prev => ({
+    // Clear error for this field when typing
+    if (error[name]) {
+      setError((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
-    setError('');
-    setSucces('');
   };
 
   const validateField = (name, value) => {
-    switch(name) {
-      case 'businessName':
-        return !value.trim() ? 'Business name is required' : '';
-      case 'phoneNumber':
-        if (!value.trim()) return 'Vendor number is required';
-        if(!/^\d{9}$/.test(value)) return 'phone number must be 9 digits';
-        return '';
-      case 'category':
-        return !value.trim() ? 'category is required' : '';
+    switch (name) {
+      case "businessName":
+        return !value.trim() ? "Business name is required" : "";
+      case "phoneNumber":
+        if (!value.trim()) return "Vendor number is required";
+        if (!/^\d{9}$/.test(value)) return "Phone number must be 9 digits";
+        return "";
+      case "category":
+        return !value.trim() ? "Category is required" : "";
       default:
-        return '';
+        return "";
     }
-  }
+  };
 
   const validateForm = () => {
-    const newError ={};
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newError[key] = error;
+    const newError = {};
+    Object.keys(formData).forEach((key) => {
+      const fieldError = validateField(key, formData[key]);
+      if (fieldError) newError[key] = fieldError;
     });
     setError(newError);
-    return Object.keys(newError).length ===0;
-  }
-
+    return Object.keys(newError).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,51 +62,56 @@ const CreateVendor = () => {
     if (!validateForm()) return;
 
     setSubmit(true);
-    
 
     try {
-      const existingVendors = JSON.parse(localStorage.getItem('vendor') || '[]');
+      const existingVendors = JSON.parse(
+        localStorage.getItem("vendorNumbers") || "[]",
+      );
       const newVendor = {
         id: Date.now(),
-        ...formData,
-        phoneNumber:  parseInt(formData.phoneNumber),
-        createdAt: new Date().toISOString()
+        businessName: formData.businessName,
+        phoneNumber: parseInt(formData.phoneNumber),
+        category: formData.category,
+        createdAt: new Date().toISOString(),
       };
-      existingVendors.push(newVendor)
-      localStorage.setItem('vendorNumbers', JSON.stringify(existingVendors));
+      existingVendors.push(newVendor);
+      localStorage.setItem("vendorNumbers", JSON.stringify(existingVendors));
 
-      setSucces('Vendor created succefully');
+      setSuccess("Vendor created successfully");
 
-      setForData({
-        businessName: '',
-        phoneNumber: '',
-        category: ''
-      })
+      setFormData({
+        businessName: "",
+        phoneNumber: "",
+        category: "",
+      });
 
-      setTimeout(() => setSucces(''), 3000);
-
-    }catch (err) {
-      setError(prev => ({
+      // Redirect after success
+      setTimeout(() => {
+        setSuccess("");
+        navigate("/SearchVendor"); // Go back to search page
+      }, 2000);
+    } catch (err) {
+      setError((prev) => ({
         ...prev,
-        submit: 'failed to create vendor. Please try again'
+        submit: "Failed to create vendor. Please try again",
       }));
-    }finally {
-      setSubmit(false)
+    } finally {
+      setSubmit(false);
     }
   };
 
   const handleBlur = (e) => {
-    const {name, value} = e.target;
-    const error = validateField(name, value);
-    setError(prev => ({
+    const { name, value } = e.target;
+    const fieldError = validateField(name, value);
+    setError((prev) => ({
       ...prev,
-      [name]: error
+      [name]: fieldError,
     }));
   };
 
-
   return (
     <div className="review-card">
+      <Toaster position="top-center" />
       <div>
         <div className="brand-header">
           <div className="brand-title">
@@ -118,8 +123,8 @@ const CreateVendor = () => {
         </div>
 
         {/* display messages */}
-
         {success && <div className="success-message">{success}</div>}
+        {error.submit && <div className="error-message">{error.submit}</div>}
 
         <form onSubmit={handleSubmit} className="create-vendor">
           <div className="form-field">
@@ -127,14 +132,14 @@ const CreateVendor = () => {
               type="text"
               name="businessName"
               value={formData.businessName}
-              onChange={handleCahange}
+              onChange={handleChange}
               onBlur={handleBlur}
               placeholder="Enter Your Business Name"
               disabled={submit}
               className={error.businessName ? "input-error" : ""}
             />
             {error.businessName && (
-              <div className="input-error">{error.businessName}</div>
+              <div className="field-error-message">{error.businessName}</div>
             )}
           </div>
 
@@ -144,13 +149,13 @@ const CreateVendor = () => {
               name="phoneNumber"
               placeholder="Enter Vendors Number"
               value={formData.phoneNumber}
-              onChange={handleCahange}
+              onChange={handleChange}
               onBlur={handleBlur}
               disabled={submit}
               className={error.phoneNumber ? "input-error" : ""}
             />
             {error.phoneNumber && (
-              <div className="input-error">{error.phoneNumber}</div>
+              <div className="field-error-message">{error.phoneNumber}</div>
             )}
           </div>
 
@@ -159,16 +164,14 @@ const CreateVendor = () => {
               type="text"
               name="category"
               value={formData.category}
-              onChange={handleCahange}
+              onChange={handleChange}
               onBlur={handleBlur}
               placeholder="What is your Category e.g Fashion"
               disabled={submit}
               className={error.category ? "input-error" : ""}
             />
             {error.category && (
-              <div className="input-error">
-                {error.category}
-              </div>
+              <div className="field-error-message">{error.category}</div>
             )}
           </div>
 
@@ -181,7 +184,7 @@ const CreateVendor = () => {
                 cursor: submit ? "not-allowed" : "pointer",
               }}
             >
-              {submit ? "creating..." : "Create"}
+              {submit ? "Creating..." : "Create"}
             </button>
           </div>
         </form>
@@ -192,6 +195,6 @@ const CreateVendor = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CreateVendor
+export default CreateVendor;

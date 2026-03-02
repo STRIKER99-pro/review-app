@@ -1,5 +1,4 @@
-
-import './SubmitReview.css'
+import "./SubmitReview.css";
 
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,8 +14,7 @@ const SubmitReview = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-  // get vendor data from local stat
+  // ===== FIXED: GET VENDOR DATA (separate useEffect) =====
   useEffect(() => {
     const vendorData = location.state?.vendor;
 
@@ -28,7 +26,7 @@ const SubmitReview = () => {
 
     console.log("Vendor data received:", vendorData);
     setVendor(vendorData);
-  }, [location.state, navigate]);
+  }, [location.state, navigate]); // ← Fixed: Removed nested useEffect
 
   // handle rating click
   const handleRatingClick = (selectedRating) => {
@@ -172,7 +170,7 @@ const SubmitReview = () => {
     });
   };
 
-  // Show loading if vendor is null 
+  // Show loading if vendor is null
   if (!vendor) {
     return (
       <div className="review-card">
@@ -186,7 +184,6 @@ const SubmitReview = () => {
         </div>
         <div style={{ textAlign: "center", padding: "50px" }}>
           <p>Loading vendor data...</p>
-          <p>Location state: {JSON.stringify(location.state)}</p>
           <button onClick={() => navigate("/")}>Go Back</button>
         </div>
       </div>
@@ -262,7 +259,7 @@ const SubmitReview = () => {
             style={{ display: "flex", gap: "10px", justifyContent: "center" }}
           >
             <button
-            className="cancel-button"
+              className="cancel-button"
               type="button"
               onClick={handleCancel}
               disabled={isSubmitting}
@@ -293,3 +290,6 @@ const SubmitReview = () => {
 };
 
 export default SubmitReview;
+
+
+

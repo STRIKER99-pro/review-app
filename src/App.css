@@ -29,6 +29,7 @@
 }
 
 body {
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -38,6 +39,7 @@ body {
   padding: 0px;
   margin: 0;
   background: #f5f7fb;
+  z-index: 1001;
 }
 
 #root {

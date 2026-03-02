@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import {
@@ -13,6 +12,7 @@ import {
   FaUserPlus,
   FaBars,
   FaTimes,
+  FaPen, // Added for SubmitReview icon
 } from "react-icons/fa";
 import "./DashBoard.css";
 
@@ -71,7 +71,10 @@ const DashBoard = () => {
       )}
 
       {/* Mobile Menu Toggle Button */}
-      <button className="menu-toggle" onClick={toggleSidebar}>
+      <button
+        className={`menu-toggle ${isSidebarOpen ? "hidden" : ""}`}
+        onClick={toggleSidebar}
+      >
         <FaBars />
       </button>
 
@@ -81,7 +84,10 @@ const DashBoard = () => {
           <div className="brand-title">
             ReviewIt <span>Trust</span>
           </div>
-          <button className="close-sidebar" onClick={closeSidebar}>
+          <button
+            className={`close-sidebar ${!isSidebarOpen ? "hidden" : ""}`}
+            onClick={closeSidebar}
+          >
             <FaTimes />
           </button>
         </div>
@@ -100,6 +106,18 @@ const DashBoard = () => {
         </div>
 
         <nav className="sidebar-nav">
+          {/* Home*/}
+          <NavLink
+            to="/Home"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+            onClick={handleContentClick}
+          >
+            <FaHome /> <span>Home </span>
+          </NavLink>
+
+          {/* Search Page (explicit) */}
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -107,9 +125,10 @@ const DashBoard = () => {
             }
             onClick={handleContentClick}
           >
-            <FaHome /> <span>Home</span>
+            <FaSearch /> <span>Search Vendors</span>
           </NavLink>
 
+          {/* Create Vendor Page */}
           <NavLink
             to="/CreateVendor"
             className={({ isActive }) =>
@@ -120,30 +139,7 @@ const DashBoard = () => {
             <FaPlus /> <span>Create Vendor</span>
           </NavLink>
 
-          {currentUser && (
-            <>
-              <NavLink
-                to="/my-reviews"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-                onClick={handleContentClick}
-              >
-                <FaStar /> <span>My Reviews</span>
-              </NavLink>
-
-              <NavLink
-                to="/create-vendor"
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-                onClick={handleContentClick}
-              >
-                <FaPlus /> <span>Add Vendor</span>
-              </NavLink>
-            </>
-          )}
-
+          {/* See Reviews Page */}
           <NavLink
             to="/SeeReview"
             className={({ isActive }) =>
@@ -154,6 +150,33 @@ const DashBoard = () => {
             <FaList /> <span>See Reviews</span>
           </NavLink>
 
+          {/* Submit Review Page */}
+          {currentUser && (
+            <NavLink
+              to="/SubmitReview"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={handleContentClick}
+            >
+              <FaPen /> <span>Submit Review</span>
+            </NavLink>
+          )}
+
+          {/* My Reviews - Only for logged in users */}
+          {currentUser && (
+            <NavLink
+              to="/my-reviews"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={handleContentClick}
+            >
+              <FaStar /> <span>My Reviews</span>
+            </NavLink>
+          )}
+
+          {/* Profile - Only for logged in users */}
           {currentUser && (
             <NavLink
               to="/profile"
@@ -166,6 +189,7 @@ const DashBoard = () => {
             </NavLink>
           )}
 
+          {/* About Page */}
           <NavLink
             to="/about"
             className={({ isActive }) =>
@@ -196,8 +220,8 @@ const DashBoard = () => {
             <div className="guest-info">
               <p className="guest-badge">Guest Mode</p>
               <div className="guest-permissions">
-                <span>View & Search</span>
-                <span className="restricted">Create/Review</span>
+                <span>✓ View & Search</span>
+                <span className="restricted">✗ Create/Review</span>
               </div>
               <div className="guest-actions">
                 <button
@@ -213,6 +237,17 @@ const DashBoard = () => {
                   <FaSignInAlt /> Login
                 </button>
               </div>
+              {/* Guest message for Submit Review */}
+              <p
+                className="guest-note"
+                style={{
+                  fontSize: "0.7rem",
+                  marginTop: "10px",
+                  color: "#ef4444",
+                }}
+              >
+                *Login to submit reviews
+              </p>
             </div>
           ) : (
             <div className="guest-info">
@@ -255,3 +290,4 @@ const DashBoard = () => {
 };
 
 export default DashBoard;
+

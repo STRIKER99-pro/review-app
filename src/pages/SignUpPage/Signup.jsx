@@ -153,15 +153,15 @@ const Signup = () => {
     toast.success("Logged in successfully!");
     setIsSubmitting(false);
 
-    // Redirect to home
-    setTimeout(() => navigate("/"), 1500);
+    // Redirect to search page
+    setTimeout(() => navigate("/SearchVendor"), 1500);
   };
 
   // continue as guest
   const handleContinueAsGuest = () => {
     localStorage.setItem("guestSession", "true");
     toast.success("Continuing as guest");
-    navigate("/");
+    navigate("/SearchVendor");
   };
 
   // back arrow
@@ -420,3 +420,5 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
