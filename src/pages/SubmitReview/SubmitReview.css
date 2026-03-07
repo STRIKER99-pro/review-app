@@ -1,4 +1,14 @@
-/* SUBMIT REVIEW  */
+/* ===== SUBMIT REVIEW PAGE - BASE STYLES ===== */
+.submit-review-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
 .submit-content {
     border: 1px solid #e0e6ed;
     border-radius: 10px;
@@ -70,7 +80,7 @@
     background-color: #4b5563;
 }
 
-/*LARGE DESKTOP */
+/* ===== LARGE DESKTOP (1280px and above) ===== */
 @media screen and (min-width: 1280px) {
     .submit-content {
         padding: 28px;
@@ -108,7 +118,7 @@
     }
 }
 
-/* DESKTOP*/
+/* ===== DESKTOP (1025px - 1279px) ===== */
 @media screen and (min-width: 1025px) and (max-width: 1279px) {
     .submit-content {
         padding: 26px;
@@ -130,7 +140,7 @@
     }
 }
 
-/* SAMLL DSKTOP */
+/* ===== SMALL DESKTOP / LAPTOP (769px - 1024px) ===== */
 @media screen and (min-width: 769px) and (max-width: 1024px) {
     .submit-content {
         padding: 22px;
@@ -168,7 +178,7 @@
     }
 }
 
-/* TABLET*/
+/* ===== TABLET (481px - 768px) ===== */
 @media screen and (min-width: 481px) and (max-width: 768px) {
     .submit-content {
         padding: 20px;
@@ -217,7 +227,7 @@
     }
 }
 
-/* MOBILE*/
+/* ===== MOBILE (0 - 480px) ===== */
 @media screen and (max-width: 480px) {
     .submit-content {
         padding: 15px;
@@ -282,7 +292,7 @@
     }
 }
 
-/* DASHBOARD LAYOUT*/
+/* ===== DASHBOARD LAYOUT INTEGRATION ===== */
 .dashboard-main .submit-content {
     margin-top: 20px;
 }
@@ -314,7 +324,7 @@
     }
 }
 
-/* RATING DISPLAY*/
+/* ===== RATING DISPLAY ADJUSTMENTS ===== */
 @media screen and (max-width: 480px) {
     .submit-content .rating-compact {
         flex-direction: column;

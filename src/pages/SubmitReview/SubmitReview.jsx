@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { supabase } from "../../Backend/SupabaseClient";
 
 const SubmitReview = () => {
   const location = useLocation();
@@ -13,8 +14,25 @@ const SubmitReview = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState(null);
 
-  // ===== FIXED: GET VENDOR DATA (separate useEffect) =====
+  // Check if user is logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Please login to leave a review");
+        navigate("/signup");
+      }
+      setUser(user);
+    };
+
+    checkUser();
+  }, [navigate]);
+
+  // GET VENDOR DATA
   useEffect(() => {
     const vendorData = location.state?.vendor;
 
@@ -26,7 +44,7 @@ const SubmitReview = () => {
 
     console.log("Vendor data received:", vendorData);
     setVendor(vendorData);
-  }, [location.state, navigate]); // ← Fixed: Removed nested useEffect
+  }, [location.state, navigate]);
 
   // handle rating click
   const handleRatingClick = (selectedRating) => {
@@ -89,12 +107,22 @@ const SubmitReview = () => {
       return;
     }
 
+    if (!user) {
+      toast.error("You must be logged in to submit a review");
+      navigate("/signup");
+      return;
+    }
+
     setIsSubmitting(true);
 
-    //create new review object
     try {
+      const reviewId = Date.now();
+
+      // Create new review object for Supabase
       const newReview = {
-        id: Date.now(),
+        id: reviewId,
+        vendor_id: vendor.id,
+        user_id: user.id,
         text: reviewText.trim(),
         rating: rating,
         date: new Date()
@@ -103,25 +131,21 @@ const SubmitReview = () => {
             day: "2-digit",
             year: "numeric",
           })
-          .replace(/\//g, "/"), // format as MM/DD/YYYY
-        vendorId: vendor.id,
-        vendorName: vendor.name,
+          .replace(/\//g, "/"),
+        created_at: new Date().toISOString(),
       };
 
       console.log("New review:", newReview);
 
-      // get existing reviews for this vendor
-      const storageKey = `reviews_${vendor.id}`;
-      const existingReviews = JSON.parse(
-        localStorage.getItem(storageKey) || "[]",
-      );
+      // Insert review into Supabase
+      const { error: insertError } = await supabase
+        .from("reviews")
+        .insert([newReview]);
 
-      // add new reviews
-      const updatedReviews = [newReview, ...existingReviews]; // Newest first
-      localStorage.setItem(storageKey, JSON.stringify(updatedReviews));
+      if (insertError) throw insertError;
 
-      // update vendor's rating in vendor list
-      updateVendorRating(vendor.id, updatedReviews);
+      // Update vendor's average rating
+      await updateVendorRating(vendor.id);
 
       toast.success("Review submitted successfully!");
 
@@ -133,31 +157,42 @@ const SubmitReview = () => {
       }, 1500);
     } catch (error) {
       console.error("Error submitting review:", error);
-      toast.error("Failed to submit review. Please try again.");
+      toast.error(
+        error.message || "Failed to submit review. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  //update vendor's rating
-  const updateVendorRating = (vendorId, reviews) => {
-    const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const average = total / reviews.length;
+  // Update vendor's average rating
+  const updateVendorRating = async (vendorId) => {
+    try {
+      // Get all reviews for this vendor
+      const { data: reviews, error: fetchError } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("vendor_id", vendorId);
 
-    const allVendors = JSON.parse(localStorage.getItem("vendors") || "[]");
+      if (fetchError) throw fetchError;
 
-    const updatedVendors = allVendors.map((v) => {
-      if (v.id === vendorId) {
-        return {
-          ...v,
+      // Calculate new average
+      const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+      const average = total / reviews.length;
+
+      // Update vendor with new average and review count
+      const { error: updateError } = await supabase
+        .from("vendors")
+        .update({
           rating: average,
-          reviews: reviews.length,
-        };
-      }
-      return v;
-    });
+          reviews_count: reviews.length,
+        })
+        .eq("id", vendorId);
 
-    localStorage.setItem("vendors", JSON.stringify(updatedVendors));
+      if (updateError) throw updateError;
+    } catch (error) {
+      console.error("Error updating vendor rating:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -201,7 +236,7 @@ const SubmitReview = () => {
             ReviewIt <span>Trust</span>
           </div>
           <div className="tagline">
-            <i className="fa fa-clipboard-check">Check before you buy</i>
+            <i className="clipboard-check">Check before you buy</i>
           </div>
         </div>
 
@@ -290,6 +325,5 @@ const SubmitReview = () => {
 };
 
 export default SubmitReview;
-
 
 

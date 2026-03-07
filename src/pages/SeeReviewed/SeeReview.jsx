@@ -1,10 +1,10 @@
-
-import './SeeReview.css'
+import "./SeeReview.css";
 
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
+import { supabase } from "../../Backend/SupabaseClient";
 
 const SeeReview = () => {
   const location = useLocation();
@@ -15,7 +15,7 @@ const SeeReview = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Location state:", location.state); 
+    console.log("Location state:", location.state);
 
     // Get vendor data passed from SearchVendor
     const vendorData = location.state?.vendor;
@@ -23,43 +23,65 @@ const SeeReview = () => {
     if (!vendorData) {
       console.error("No vendor data found in location state");
       toast.error("No vendor selected");
-      navigate("/");
+      navigate("/SearchVendor");
       return;
     }
 
     console.log("Vendor data received:", vendorData);
     setVendor(vendorData);
 
-    // Load reviews from localStorage
-    const loadReviews = () => {
-      const storedReviews = JSON.parse(
-        localStorage.getItem(`reviews_${vendorData.id}`) || "[]",
-      );
-  
-      const reviewsToUse =
-        storedReviews;
-      setReviews(reviewsToUse);
+    // Load reviews from Supabase
+    const loadReviews = async () => {
+      try {
+        // Fetch reviews for this vendor from Supabase
+        const { data: reviewsData, error: reviewsError } = await supabase
+          .from("reviews")
+          .select("*")
+          .eq("vendor_id", vendorData.id)
+          .order("created_at", { ascending: false });
 
-      // Calculate average rating
-      if (reviewsToUse.length > 0) {
-        const total = reviewsToUse.reduce((sum, review) => sum + review.rating, 0,);
-        const avg = total / reviewsToUse.length;
-        setAverageRating(avg);
-      } else{
-        setAverageRating(0)
+        if (reviewsError) throw reviewsError;
+
+        // Format reviews to match your component's expected structure
+        const formattedReviews = reviewsData.map((review) => ({
+          id: review.id,
+          text: review.text,
+          rating: review.rating,
+          date: review.date,
+          vendorId: review.vendor_id,
+          userId: review.user_id,
+        }));
+
+        setReviews(formattedReviews);
+
+        // Calculate average rating
+        if (formattedReviews.length > 0) {
+          const total = formattedReviews.reduce(
+            (sum, review) => sum + review.rating,
+            0,
+          );
+          const avg = total / formattedReviews.length;
+          setAverageRating(avg);
+        } else {
+          setAverageRating(0);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error loading reviews:", error);
+        toast.error("Failed to load reviews");
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     loadReviews();
   }, [location.state, navigate]);
 
-  // render star funtion
+  // render star function
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
-    const hasHalf = rating % 1 >= 0.5; 
+    const hasHalf = rating % 1 >= 0.5;
 
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
@@ -74,15 +96,25 @@ const SeeReview = () => {
   };
 
   // HANDLE ADD REVIEW
-  const handleAddReview = () => {
+  const handleAddReview = async () => {
     if (!vendor) return;
+
+    // Check if user is logged in
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      toast.error("Please login to leave a review");
+      navigate("/signup");
+      return;
+    }
 
     // Navigate to add review page with vendor data
     navigate("/SubmitReview", {
       state: { vendor: vendor },
     });
   };
-
 
   const handleSeeMore = (e) => {
     e.preventDefault();
@@ -116,7 +148,7 @@ const SeeReview = () => {
             ReviewIt <span>Trust</span>
           </div>
           <div className="tagline">
-            <i className="fa fa-clipboard-check">Check before you buy</i>
+            <i className="clipboard-check">Check before you buy</i>
           </div>
         </div>
         <div style={{ textAlign: "center", padding: "50px", color: "red" }}>
@@ -148,20 +180,16 @@ const SeeReview = () => {
           <div className="review-content">
             <div className="review-item">
               <span className="review-label">Name:</span>
-              <span className="review-value">
-                {vendor.name}
-              </span>
+              <span className="review-value">{vendor.name}</span>
             </div>
             <div className="review-item">
               <span className="review-label">Tel:</span>
-              <span className="review-value">
-                {vendor.phoneNumber}
-              </span>
+              <span className="review-value">{vendor.phoneNumber}</span>
             </div>
             <div className="review-item">
               <span className="review-label">Category:</span>
               <span className="review-value">
-                {vendor.category || vendor.name?.split(" ")}
+                {vendor.category || "Not specified "}
               </span>
             </div>
           </div>
@@ -171,13 +199,14 @@ const SeeReview = () => {
               <span className="review-label">Average Rating</span>
               <div className="review-value rating-compact">
                 <span className="stars-avg">
-                  {reviews.length > 0 ? (renderStars(averageRating)
-                  ):(
+                  {reviews.length > 0 ? (
+                    renderStars(averageRating)
+                  ) : (
                     <span className="no-rating">No rating yet</span>
                   )}
                 </span>
                 <span className="review-count">
-                  {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
+                  {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
                 </span>
               </div>
             </div>
@@ -190,7 +219,6 @@ const SeeReview = () => {
           </a>
         </div>
 
-        
         <div className="review-list">
           {reviews.length > 0 ? (
             reviews.map((review) => (
@@ -225,3 +253,5 @@ const SeeReview = () => {
 };
 
 export default SeeReview;
+
+

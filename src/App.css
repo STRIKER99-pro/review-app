@@ -1,8 +1,3 @@
-
- */
-
-
-
 * {
   margin: 0;
   padding: 0;
@@ -29,7 +24,7 @@
 }
 
 body {
-  position: fixed;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -38,13 +33,14 @@ body {
   width: 100%;
   padding: 0px;
   margin: 0;
-  background: #f5f7fb;
-  z-index: 1001;
+  height: 100%;
+  background: var(--bg-color);
+  overflow: hidden;
 }
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -52,20 +48,23 @@ body {
 
 /* Card Container - Used by all pages */
 .review-card {
-  max-width: 1200px;
-  min-height: 100vh;
-  width: 100%;
-  height: auto;
+  max-width: 1000px;
+  /* width: 100%; */
+  height: 100%;
   background-color: var(--bg-color);
   border-radius: 10px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .15);
-  overflow: hidden;
   padding: 20px 24px;
-  margin: 0;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  min-height: 95vh;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  margin-top: -20px;
 }
 
 /* Header - Used by all pages */
@@ -77,6 +76,8 @@ body {
   margin-bottom: 24px;
   padding-bottom: 12px;
   border-bottom: 2px solid #f0f2f5;
+  width: 100%;
+  /* Ensure full width */
 }
 
 .brand-title {
@@ -99,13 +100,15 @@ body {
   letter-spacing: 0.05em;
 }
 
-.tagline {
+.clipboard-check{
   color: #3c4a5c;
   background: #eef1f6;
   padding: 6px 16px;
   border-radius: 40px;
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   font-weight: 500;
+  white-space: nowrap;
+  /* Prevent tagline from wrapping */
 }
 
 .tagline i {
@@ -124,6 +127,8 @@ body {
   color: #8a99ae;
   font-size: 0.85rem;
   font-weight: 400;
+  width: 100%;
+  /* Ensure full width */
 }
 
 /* Buttons - Used by all pages */
@@ -131,6 +136,8 @@ body {
   display: flex;
   justify-content: center;
   margin: 24px 0;
+  width: 100%;
+  /* Ensure full width */
 }
 
 .add-btn button {
@@ -165,12 +172,12 @@ body {
 
 
 
-/* ===== DESKTOP (769px - 1024px) ===== */
+/* DESKTOP*/
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   .review-card {
     max-width: 800px;
-    min-height: 800px;
     padding: 28px 28px 24px 28px;
+    margin: 0 auto;
   }
 
   .brand-title {
@@ -194,11 +201,10 @@ body {
   }
 }
 
-/* ===== TABLET (481px - 768px) ===== */
+/* TABLET */
 @media screen and (min-width: 481px) and (max-width: 768px) {
   .review-card {
     max-width: 90%;
-    min-height: 700px;
     padding: 24px 24px 20px 24px;
     margin: 0 auto;
   }
@@ -206,6 +212,7 @@ body {
   .brand-header {
     margin-bottom: 20px;
     padding-bottom: 10px;
+    flex-wrap: wrap;
   }
 
   .brand-title {
@@ -221,23 +228,25 @@ body {
   .tagline {
     font-size: 0.8rem;
     padding: 4px 12px;
+    white-space: normal;
   }
 
   .copyright-footer {
     font-size: 0.75rem;
     margin-top: 20px;
     padding-top: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }
 
-/* ===== MOBILE (0 - 480px) ===== */
+/* MOBILE */
 @media screen and (max-width: 480px) {
   .review-card {
     max-width: 100%;
-    min-height: 100vh;
     padding: 16px 16px;
     border-radius: 5px;
-    margin: 0;
+    margin: 0 auto;
   }
 
   body {
@@ -269,6 +278,7 @@ body {
     padding: 4px 10px;
     width: fit-content;
     margin: 0 auto;
+    white-space: normal;
   }
 
   .copyright-footer {
@@ -281,3 +291,6 @@ body {
     padding-top: 10px;
   }
 }
+
+
+

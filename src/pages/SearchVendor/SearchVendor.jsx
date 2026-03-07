@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import { MdCategory } from "react-icons/md";
 import { toast, Toaster } from "react-hot-toast";
+import { supabase } from "../../Backend/SupabaseClient";
 
 const SearchVendor = () => {
   const navigate = useNavigate();
@@ -25,77 +26,110 @@ const SearchVendor = () => {
 
   const [filteredResults, setFilteredResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryVendors, setCategoryVendors] = useState([]);
 
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
 
   const [vendorNumbers, setVendorNumbers] = useState([]);
 
+  // Fetch vendors from Supabase
   useEffect(() => {
-    const storedVendors = JSON.parse(
-      localStorage.getItem("vendorNumbers") || "[]",
-    );
-
-    const defualtVendors = [
-      {
-        id: 1,
-        phoneNumber: "680752477",
-        name: "Mira Fashion",
-        rating: 4.5,
-        reviews: 32,
-      },
-      {
-        id: 2,
-        phoneNumber: "686752477",
-        name: "Luxury Fashion",
-        rating: 4,
-        reviews: 23,
-      },
-      {
-        id: 3,
-        phoneNumber: "680755477",
-        name: "Jewery Fashion",
-        rating: 3,
-        reviews: 15,
-      },
-    ];
-
-    const formattedStoredVendors = storedVendors.map((vendor) => {
-      const reviews = JSON.parse(
-        localStorage.getItem(`reviews_${vendor.id}`) || "[]",
-      );
-
-      let avgRating = 0;
-      if (reviews.length > 0) {
-        const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-        avgRating = total / reviews.length;
-      }
-
-      return {
-        id: vendor.id,
-        phoneNumber: vendor.phoneNumber.toString(),
-        name: vendor.businessName,
-        rating: avgRating,
-        reviews: reviews.length,
-      };
-    });
-
-    setVendorNumbers([...defualtVendors, ...formattedStoredVendors]);
+    fetchVendors();
   }, []);
 
-  const categories = [
-    { id: 1, name: "Luxury Fashion", rating: 4 },
-    { id: 2, name: "Jewelry Store", rating: 2 },
-    { id: 3, name: "Watch Shop", rating: 3 },
-    { id: 4, name: "Handbag Boutiques", rating: 2.5 },
-    { id: 5, name: "Baby Clothing", rating: 4.5 },
-    { id: 6, name: "Kids Fashion", rating: 1 },
-    { id: 7, name: "Sport Wear", rating: 1.5 },
-  ];
+  // Function to fetch vendors from Supabase
+  const fetchVendors = async () => {
+    try {
+      // Fetch vendors from Supabase
+      const { data: vendorsData, error: vendorsError } = await supabase
+        .from("vendors")
+        .select("*");
+
+      if (vendorsError) throw vendorsError;
+
+      // If there are vendors in Supabase, format them
+      if (vendorsData && vendorsData.length > 0) {
+        const formattedVendors = await Promise.all(
+          vendorsData.map(async (vendor) => {
+            // Fetch reviews for this vendor from Supabase
+            const { data: reviewsData, error: reviewsError } = await supabase
+              .from("reviews")
+              .select("rating")
+              .eq("vendor_id", vendor.id);
+
+            if (reviewsError) throw reviewsError;
+
+            // Calculate average rating
+            let avgRating = 0;
+            const reviewCount = reviewsData?.length || 0;
+            if (reviewCount > 0) {
+              const total = reviewsData.reduce(
+                (sum, review) => sum + review.rating,
+                0,
+              );
+              avgRating = total / reviewCount;
+            }
+
+            return {
+              id: vendor.id,
+              phoneNumber: vendor.phone_number,
+              name: vendor.business_name,
+              category: vendor.category,
+              rating: avgRating,
+              reviews: reviewCount,
+            };
+          }),
+        );
+
+        setVendorNumbers(formattedVendors);
+      } else {
+        // No vendors in database - set empty array
+        setVendorNumbers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching vendors:", error);
+      toast.error("Failed to load vendors");
+      setVendorNumbers([]);
+    }
+  };
+
+  const [categories, setCategories] = useState([]);
+
+  const loadCategories = async () => {
+    try {
+      const { data: vendors, error } = await supabase
+        .from("vendors")
+        .select("category")
+        .not("category", "is", null);
+
+      if (error) throw error;
+
+      // Get unique categories
+      const uniqueCategories = [...new Set(vendors.map((v) => v.category))];
+
+      // Create category objects with icons
+      const categoryList = uniqueCategories.map((cat, index) => ({
+        id: index + 1,
+        name: cat,
+        rating: 0,
+      }));
+
+      setCategories(categoryList);
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  };
+
+  // Call it in useEffect
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   const handleCreateVendor = () => {
     setShowCreateModel(false);
-    navigate("CreateVendor", {
+    navigate("/CreateVendor", {
       state: { phoneNumber: selectedVendor.phoneNumber },
     });
     toast.success("Let create your vendor profile");
@@ -107,6 +141,35 @@ const SearchVendor = () => {
     } else {
       navigate(`/category/${item.id}`, { state: { category: item } });
     }
+  };
+
+  // NEW: Handle category click to show vendors in that category
+  const handleCategoryClick = async (category) => {
+    setSelectedCategory(category);
+    setSearchContent(true);
+
+    try {
+      // Filter vendors by the selected category
+      const vendorsInCategory = vendorNumbers.filter(
+        (vendor) =>
+          vendor.category?.toLowerCase() === category.name.toLowerCase(),
+      );
+
+      setCategoryVendors(vendorsInCategory);
+      setFilteredResults(vendorsInCategory);
+      setSearchType("vendor"); // Switch to vendor view to show the list
+    } catch (error) {
+      console.error("Error filtering vendors by category:", error);
+      toast.error("Failed to load vendors in this category");
+    }
+  };
+
+  // NEW: Handle back to categories
+  const handleBackToCategories = () => {
+    setSelectedCategory(null);
+    setCategoryVendors([]);
+    setSearchContent(false);
+    setSearchType("item"); // Switch back to category view
   };
 
   const HandleSearch = (e) => {
@@ -133,7 +196,8 @@ const SearchVendor = () => {
         category.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       if (category) {
-        navigate(`/category/${category.id}`, { state: { category } });
+        // Show vendors in this category instead of navigating
+        handleCategoryClick(category);
       } else {
         toast.error("category not found");
       }
@@ -158,11 +222,7 @@ const SearchVendor = () => {
   };
 
   const handleVendorClick = (vendor) => {
-    navigate(`/SeeReview/${vendor.id}`, { state: { vendor } });
-  };
-
-  const handleCategoryClick = (category) => {
-    navigate(`/SeeReview/${categories.id}`, { state: { category } });
+    navigate("/SeeReview", { state: { vendor } });
   };
 
   useEffect(() => {
@@ -178,18 +238,17 @@ const SearchVendor = () => {
   }, [selectedIndex]);
 
   useEffect(() => {
-    if (searchType === "vendor") {
-      setFilteredResults(vendorNumbers.slice(0, 10));
-    } else {
-      setFilteredResults(categories.slice(0, 10));
+    if (!selectedCategory) {
+      if (searchType === "vendor") {
+        setFilteredResults(vendorNumbers.slice(0, 10));
+      } else {
+        setFilteredResults(categories.slice(0, 10));
+      }
     }
-  }, [searchType, vendorNumbers]);
+  }, [searchType, vendorNumbers, selectedCategory]);
 
   useEffect(() => {
-    console.log("useEffect running", { searchQuery, searchType });
-
-    if (!searchQuery.trim()) {
-      console.log("enpty search");
+    if (!searchQuery.trim() && !selectedCategory) {
       setSearchContent(false);
       if (searchType === "vendor") {
         setFilteredResults(vendorNumbers);
@@ -200,30 +259,29 @@ const SearchVendor = () => {
       return;
     }
 
+    if (selectedCategory) {
+      return; // Don't filter when showing category vendors
+    }
+
     setSearchContent(true);
     const query = searchQuery.toLowerCase().trim();
+
     if (searchType === "vendor") {
-      console.log("filtering vendors");
       const filtered = vendorNumbers.filter((vendor) => {
-        console.log("checking vendor:", vendor);
         return (
           vendor.phoneNumber.includes(query) ||
           vendor.name.toLowerCase().includes(query)
         );
       });
-      console.log("filtered vendors", filtered);
       setFilteredResults(filtered);
     } else {
-      console.log("filtered categories");
       const filtered = categories.filter((category) => {
-        console.log("checcking categories:", category);
         return category.name.toLowerCase().includes(query);
       });
-      console.log("filtered categories:", filtered);
       setFilteredResults(filtered);
     }
     setSelectedIndex(-1);
-  }, [searchQuery, searchType, vendorNumbers]);
+  }, [searchQuery, searchType, vendorNumbers, selectedCategory]);
 
   const handleKeyDown = (e) => {
     if (!filteredResults.length) return;
@@ -292,6 +350,10 @@ const SearchVendor = () => {
   const handeSearchContent = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
+    if (selectedCategory) {
+      setSelectedCategory(null); // Clear category selection when searching
+      setCategoryVendors([]);
+    }
   };
 
   return (
@@ -319,7 +381,7 @@ const SearchVendor = () => {
 
             <input
               ref={inputRef}
-              type={searchType === "vendor" ? "number" : "/^[A-Za-z]*$/"}
+              type={searchType === "vendor" ? "number" : "text"}
               className="search-vendor"
               placeholder={
                 searchType === "vendor"
@@ -365,7 +427,24 @@ const SearchVendor = () => {
           )}
         </form>
 
-        {searchContent && filteredResults.length > 0 && searchQuery.trim() && (
+        {/* Category Header when category is selected */}
+        {selectedCategory && (
+          <div className="category-header">
+            <button className="back-button" onClick={handleBackToCategories}>
+              ← Back to Categories
+            </button>
+            <h2 className="selected-category-title">
+              <MdCategory className="category-icon" /> {selectedCategory.name}
+            </h2>
+            <p className="vendor-count">
+              {categoryVendors.length} vendor
+              {categoryVendors.length !== 1 ? "s" : ""} found
+            </p>
+          </div>
+        )}
+
+        {/* Results Display */}
+        {searchContent && filteredResults.length > 0 && (
           <div className="live-results" ref={resultsRef}>
             <div className="results-header">
               <span className="results-count">
@@ -453,55 +532,74 @@ const SearchVendor = () => {
             </div>
           )}
 
-        {!searchContent && (
+        {!searchContent && !selectedCategory && (
           <div className="review-search">
             {searchType === "vendor" ? (
               <div className="review-contact-container">
                 <h3 className="section-title">
                   <FaUserPlus /> Top Vendors
                 </h3>
-                {vendorNumbers.map((vendor) => (
-                  <div
-                    key={vendor.id}
-                    className="review-contact clickable"
-                    onClick={() => handleItemClick(vendor)}
-                  >
-                    <div className="review-numbers">
-                      <FaWhatsapp className="contact-icon" />
-                      {vendor.phoneNumber}
+                {vendorNumbers.length > 0 ? (
+                  vendorNumbers.slice(0, 5).map((vendor) => (
+                    <div
+                      key={vendor.id}
+                      className="review-contact clickable"
+                      onClick={() => handleItemClick(vendor)}
+                    >
+                      <div className="review-numbers">
+                        <FaWhatsapp className="contact-icon" />
+                        {vendor.phoneNumber}
+                      </div>
+                      <div className="vendor-info">
+                        <span className="vendor-name">{vendor.name}</span>
+                        <span className="vendor-reviews">
+                          ({vendor.reviews} reviews)
+                        </span>
+                      </div>
+                      <div className="star-icon">
+                        {renderStars(vendor.rating)}
+                      </div>
                     </div>
-                    <div className="vendor-info">
-                      <span className="vendor-name">{vendor.name}</span>
-                      <span className="vendor-reviews">
-                        ({vendor.reviews} reviews)
-                      </span>
-                    </div>
-                    <div className="star-icon">
-                      {renderStars(vendor.rating)}
-                    </div>
+                  ))
+                ) : (
+                  <div className="no-vendors-message">
+                    <p>No vendors found. Create your first vendor!</p>
                   </div>
-                ))}
+                )}
               </div>
             ) : (
               <div className="categories-list">
                 <h3 className="section-title">
                   <MdCategory /> Shop Categories
                 </h3>
-                {categories.map((category) => (
-                  <div
-                    key={category.id}
-                    className="review-contact clickable"
-                    onClick={() => handleItemClick(category)}
-                  >
-                    <div className="review-numbers">
-                      <MdCategory className="contact-icon" />
-                      {category.name}
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="review-contact clickable"
+                      onClick={() => handleCategoryClick(category)}
+                    >
+                      <div className="review-numbers">
+                        <MdCategory className="contact-icon" />
+                        {category.name}
+                      </div>
+                      <div className="category-stats">
+                        <span className="vendor-count">
+                          {
+                            vendorNumbers.filter(
+                              (v) => v.category === category.name,
+                            ).length
+                          }{" "}
+                          vendors
+                        </span>
+                      </div>
                     </div>
-                    <div className="star-icon">
-                      {renderStars(category.rating)}
-                    </div>
+                  ))
+                ) : (
+                  <div className="no-categories-message">
+                    <p>No categories found. Create vendors with categories!</p>
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
@@ -516,5 +614,3 @@ const SearchVendor = () => {
 };
 
 export default SearchVendor;
-
-

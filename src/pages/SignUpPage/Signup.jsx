@@ -1,9 +1,9 @@
-
 import "./Signup.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { FaPhone, FaEnvelope, FaUser, FaArrowLeft } from "react-icons/fa";
+import { supabase } from "../../Backend/SupabaseClient";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingIdentifier, setPendingIdentifier] = useState("");
 
-  // SIMPLE CODE GENERATOR 
+  // SIMPLE CODE GENERATOR
   const generateCode = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
@@ -61,7 +61,7 @@ const Signup = () => {
     setIsSubmitting(false);
   };
 
-  // 
+  //
   const handleEmailRequest = (e) => {
     e.preventDefault();
 
@@ -91,7 +91,7 @@ const Signup = () => {
   };
 
   // HANDLE VERIFICATION
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
 
     let isValid = false;
@@ -109,52 +109,64 @@ const Signup = () => {
 
     setIsSubmitting(true);
 
-    //Check if user exists in localStorage
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    let user;
+    try {
+      let userId;
 
-    if (signUpMethod === "phone") {
-      user = users.find((u) => u.phoneNumber === pendingIdentifier);
-    } else {
-      user = users.find((u) => u.email === pendingIdentifier);
+      if (signUpMethod === "email") {
+        // Sign up with email using Supabase Auth
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: emailCode,
+        });
+
+        if (error) throw error;
+        userId = data.user.id;
+
+        // Create profile
+        await supabase.from("profiles").insert([
+          {
+            id: userId,
+            username: username || email.split("@")[0],
+            email: email,
+            phone_number: null,
+          },
+        ]);
+      } else {
+        // For phone signup
+        // Create new user with metadata
+        const displayName = username || `User${phoneNumber.slice(-4)}`;
+
+        const { data, error } = await supabase.auth.signUp({
+          email: `${phoneNumber}@phone.user`,
+          password: phoneCode,
+          options: {
+            data: {
+              phone_number: phoneNumber,
+              username: displayName,
+            },
+          },
+        });
+
+        if (error) throw error;
+        userId = data.user.id;
+
+        // Profile will be created by database trigger
+        // No need for manual insert
+      }
+
+      // Clear any existing guest session
+      localStorage.removeItem("guestSession");
+
+      toast.success("Logged in successfully!");
+      setIsSubmitting(false);
+
+      // Redirect to search page
+      setTimeout(() => navigate("/SearchVendor"), 1500);
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error.message || "Login failed");
+      setIsSubmitting(false);
     }
-
-    if (!user) {
-      // Create new user
-      user = {
-        id: Date.now(),
-        ...(signUpMethod === "phone"
-          ? { phoneNumber: pendingIdentifier }
-          : { email: pendingIdentifier }),
-        username:
-          username ||
-          (signUpMethod === "phone"
-            ? `User${pendingIdentifier.slice(-4)}`
-            : pendingIdentifier.split("@")[0]),
-        verifiedMethods: [signUpMethod],
-        createdAt: new Date().toLocaleDateString(),
-      };
-
-      users.push(user);
-      localStorage.setItem("users", JSON.stringify(users));
-    }
-
-    // Log user in
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify({
-        id: user.id,
-        username: user.username,
-        phoneNumber: user.phoneNumber,
-        email: user.email,
-      }),
-    );
-
-    toast.success("Logged in successfully!");
-    setIsSubmitting(false);
-
-    // Redirect to search page
-    setTimeout(() => navigate("/SearchVendor"), 1500);
   };
 
   // continue as guest
@@ -179,7 +191,7 @@ const Signup = () => {
     }
   };
 
-  // render choose method 
+  // render choose method
   const renderChooseMethod = () => (
     <div className="auth-container">
       <h2 className="auth-title">Welcome to ReviewIt</h2>
@@ -420,5 +432,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-

@@ -12,8 +12,9 @@ import {
   FaUserPlus,
   FaBars,
   FaTimes,
-  FaPen, // Added for SubmitReview icon
+  FaPen,
 } from "react-icons/fa";
+import { supabase } from "../../Backend/SupabaseClient"; // ADDED: Import supabase
 import "./DashBoard.css";
 
 const DashBoard = () => {
@@ -21,14 +22,10 @@ const DashBoard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [isGuest, setIsGuest] = useState(false);
+  const [loading, setLoading] = useState(true); // ADDED: Loading state
 
   useEffect(() => {
-    // Check user status
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const guest = localStorage.getItem("guestSession");
-
-    if (user) setCurrentUser(user);
-    if (guest === "true") setIsGuest(true);
+    checkUser();
 
     // Close sidebar when resizing to desktop
     const handleResize = () => {
@@ -41,8 +38,51 @@ const DashBoard = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // CHANGED: Check user from Supabase instead of localStorage
+  const checkUser = async () => {
+    try {
+      // Check guest session first
+      const guest = localStorage.getItem("guestSession");
+      if (guest === "true") {
+        setIsGuest(true);
+        setCurrentUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Check Supabase session
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Get additional user data from profiles table
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        setCurrentUser({
+          id: user.id,
+          username: profile?.username || user.email?.split("@")[0] || "User",
+          email: user.email,
+          phoneNumber: profile?.phone_number || user.phone || "",
+        });
+        setIsGuest(false);
+      } else {
+        setCurrentUser(null);
+        setIsGuest(false);
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleSidebar = (e) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     setIsSidebarOpen(!isSidebarOpen);
   };
 
@@ -50,10 +90,17 @@ const DashBoard = () => {
     setIsSidebarOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("guestSession");
-    navigate("/signup");
+  // CHANGED: Logout from Supabase
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.removeItem("guestSession");
+      setCurrentUser(null);
+      setIsGuest(false);
+      navigate("/signup");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   // Close sidebar when clicking on overlay or any nav link
@@ -62,6 +109,24 @@ const DashBoard = () => {
       closeSidebar();
     }
   };
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100%",
+          }}
+        >
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">
@@ -98,7 +163,7 @@ const DashBoard = () => {
             type="text"
             placeholder="Quick search..."
             onClick={() => {
-              navigate("/");
+              navigate("/SearchVendor");
               handleContentClick();
             }}
             readOnly
@@ -108,7 +173,7 @@ const DashBoard = () => {
         <nav className="sidebar-nav">
           {/* Home*/}
           <NavLink
-            to="/Home"
+            to="/"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
@@ -117,9 +182,9 @@ const DashBoard = () => {
             <FaHome /> <span>Home </span>
           </NavLink>
 
-          {/* Search Page (explicit) */}
+          {/* Search Page */}
           <NavLink
-            to="/"
+            to="/SearchVendor"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
@@ -128,7 +193,7 @@ const DashBoard = () => {
             <FaSearch /> <span>Search Vendors</span>
           </NavLink>
 
-          {/* Create Vendor Page */}
+          {/* Create Vendor Page - Available for both users and guests */}
           <NavLink
             to="/CreateVendor"
             className={({ isActive }) =>
@@ -150,7 +215,7 @@ const DashBoard = () => {
             <FaList /> <span>See Reviews</span>
           </NavLink>
 
-          {/* Submit Review Page */}
+          {/* Submit Review Page - Only for logged in users */}
           {currentUser && (
             <NavLink
               to="/SubmitReview"
@@ -166,7 +231,7 @@ const DashBoard = () => {
           {/* My Reviews - Only for logged in users */}
           {currentUser && (
             <NavLink
-              to="/my-reviews"
+              to="/MyReviews"
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
@@ -179,7 +244,7 @@ const DashBoard = () => {
           {/* Profile - Only for logged in users */}
           {currentUser && (
             <NavLink
-              to="/profile"
+              to="/Profile"
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
@@ -191,7 +256,7 @@ const DashBoard = () => {
 
           {/* About Page */}
           <NavLink
-            to="/about"
+            to="/About"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
@@ -218,7 +283,7 @@ const DashBoard = () => {
             </div>
           ) : isGuest ? (
             <div className="guest-info">
-              <p className="guest-badge">Guest Mode</p>
+              <p className="guest-badge">👤 Guest Mode</p>
               <div className="guest-permissions">
                 <span>✓ View & Search</span>
                 <span className="restricted">✗ Create/Review</span>
@@ -260,7 +325,7 @@ const DashBoard = () => {
                   <FaUserPlus /> Sign Up
                 </button>
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/Signup")}
                   className="login-btn"
                 >
                   <FaSignInAlt /> Login
@@ -290,4 +355,3 @@ const DashBoard = () => {
 };
 
 export default DashBoard;
-

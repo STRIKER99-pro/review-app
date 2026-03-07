@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { supabase } from "./Backend/SupabaseClient";
 import "./App.css";
 
 import HomePage from "./pages/HomePage/HomePage";
@@ -8,23 +10,66 @@ import SearchVendor from "./pages/SearchVendor/SearchVendor";
 import CreateVendor from "./pages/NewVendor/CreateVendor";
 import SeeReview from "./pages/SeeReviewed/SeeReview";
 import SubmitReview from "./pages/SubmitReview/SubmitReview";
+import Categories from "./pages/Categories/Categories";
+import MyReviews from "./pages/MyReviews/MyReviews";
+import Profile from "./pages/Profile/Profile";
+import About from "./pages/About/About";
 
-// ===== FIXED: Protected Route with safe JSON parsing =====
+//ProtectedRoute for Supabase
 const ProtectedRoute = ({ children }) => {
-  // Safely get and parse currentUser
-  const currentUserString = localStorage.getItem("currentUser");
-  let currentUser = null;
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    currentUser = JSON.parse(currentUserString);
-  } catch (error) {
-    console.error("Error parsing currentUser:", error);
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      // Check guest session first
+      const guestSession = localStorage.getItem("guestSession");
+
+      if (guestSession === "true") {
+        // Guests are not allowed for protected routes
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      // Check Supabase session
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error("Auth check error:", error);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        Loading...
+      </div>
+    );
   }
 
-  const guestSession = localStorage.getItem("guestSession");
-
-  // If guest or no user, redirect to signup
-  if (guestSession === "true" || !currentUser) {
+  if (!isAuthenticated) {
     return <Navigate to="/Signup" replace />;
   }
 
@@ -38,8 +83,10 @@ function App() {
         <Route path="/" element={<DashBoard />}>
           <Route index element={<HomePage />} />
           <Route path="SearchVendor" element={<SearchVendor />} />
+          <Route path="Categories" element={<Categories />} />
+          <Route path="About" element={<About />} />
 
-          {/*PROTECTED ROUTES */}
+          {/* PROTECTED ROUTES */}
           <Route
             path="CreateVendor"
             element={
@@ -56,6 +103,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <SubmitReview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="MyReviews" // ← FIXED: Added the missing "e"
+            element={
+              <ProtectedRoute>
+                <MyReviews />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="Profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />
