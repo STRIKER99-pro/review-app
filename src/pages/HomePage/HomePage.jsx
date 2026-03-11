@@ -174,9 +174,6 @@ const HomePage = () => {
       {/* Header */}
       <div className="home-header">
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>

@@ -814,40 +814,40 @@
     }
 }
 
-/* DASHBOARD LAYOUT INTEGRATION */
+/* NavBar LAYOUT INTEGRATION */
 
-.dashboard-main .auth-container {
+.NavBar-main .auth-container {
     padding: 15px 0;
 }
 
 @media screen and (max-width: 768px) {
-    .dashboard-main .auth-container {
+    .NavBar-main .auth-container {
         padding: 10px 0;
     }
 
-    .dashboard-main .auth-title {
+    .NavBar-main .auth-title {
         font-size: 1.3rem;
     }
 
-    .dashboard-main .auth-method-button {
+    .NavBar-main .auth-method-button {
         padding: 12px;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .dashboard-main .auth-container {
+    .NavBar-main .auth-container {
         padding: 5px 0;
     }
 
-    .dashboard-main .auth-title {
+    .NavBar-main .auth-title {
         font-size: 1.2rem;
     }
 
-    .dashboard-main .form-input {
+    .NavBar-main .form-input {
         padding: 8px 10px;
     }
 
-    .dashboard-main .auth-submit-button {
+    .NavBar-main .auth-submit-button {
         padding: 10px;
     }
 }

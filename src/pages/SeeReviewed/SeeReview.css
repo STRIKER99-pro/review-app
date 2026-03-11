@@ -552,33 +552,33 @@
     }
 }
 
-/*DASHBOARD */
+/*NavBar */
 
-.dashboard-main .review-container {
+.NavBar-main .review-container {
     margin-bottom: 20px;
 }
 
 @media screen and (max-width: 768px) {
-    .dashboard-main .review-container {
+    .NavBar-main .review-container {
         margin-bottom: 16px;
     }
 
-    .dashboard-main .review-entry {
+    .NavBar-main .review-entry {
         margin: 3px 0;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .dashboard-main .review-container {
+    .NavBar-main .review-container {
         margin-bottom: 12px;
         padding: 8px;
     }
 
-    .dashboard-main .review-content {
+    .NavBar-main .review-content {
         padding: 2px 8px;
     }
 
-    .dashboard-main .vendor-info-banner {
+    .NavBar-main .vendor-info-banner {
         margin-bottom: 8px;
     }
 }

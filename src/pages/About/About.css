@@ -1,56 +1,34 @@
+/* Make the page take full viewport */
 .about-page {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    overflow-y: auto;
-    height: 100vh;
-    scroll-behavior: smooth;
-}
-
-/* For tablets and mobile */
-@media screen and (max-width: 768px) {
-    .about-page {
-        padding: 15px;
-        height: 100vh;
-        overflow-y: auto;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-page {
-        padding: 10px;
-        height: 100vh;
-        overflow-y: auto;
-    }
-}
-
-.review-card {
-    width: 100%;
-    height: auto;
-    background-color: var(--bg-color);
-    border-radius: 10px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-    padding: 32px 36px;
+    min-height: 100vh;
+    background-color: #f5f7fb;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    /* Remove overflow properties from here */
+    overflow-y: auto;
 }
 
-@media screen and (max-width: 768px) {
-    .review-card {
-        padding: 24px;
-    }
+/* Make the review card take full width and height */
+.about-page .review-card {
+    width: 100%;
+    flex: 1;
+    background-color: var(--bg-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    border-radius: 0;
 }
 
-@media screen and (max-width: 480px) {
-    .review-card {
-        padding: 18px;
-    }
+/* Content container to control inner width while keeping background full */
+.about-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
 }
 
-/* The rest of your existing styles remain exactly the same from here */
 .brand-header {
     display: flex;
     flex-wrap: wrap;
@@ -61,33 +39,12 @@
     border-bottom: 2px solid #f0f2f5;
 }
 
-@media screen and (max-width: 768px) {
-    .brand-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 10px;
-    }
-}
-
 .brand-title {
     font-size: 1.9rem;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--sec-text-color);
     line-height: 1.2;
-}
-
-@media screen and (max-width: 768px) {
-    .brand-title {
-        font-size: 1.7rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .brand-title {
-        font-size: 1.5rem;
-    }
 }
 
 .brand-title span {
@@ -102,21 +59,6 @@
     letter-spacing: 0.05em;
 }
 
-@media screen and (max-width: 768px) {
-    .brand-title span {
-        font-size: 0.9rem;
-        padding: 3px 8px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .brand-title span {
-        font-size: 0.8rem;
-        padding: 3px 7px;
-        margin-left: 5px;
-    }
-}
-
 .tagline {
     color: #3c4a5c;
     background: #eef1f6;
@@ -124,20 +66,6 @@
     border-radius: 40px;
     font-size: 0.9rem;
     font-weight: 500;
-}
-
-@media screen and (max-width: 768px) {
-    .tagline {
-        font-size: 0.85rem;
-        padding: 5px 14px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .tagline {
-        font-size: 0.8rem;
-        padding: 4px 12px;
-    }
 }
 
 .back-button {
@@ -168,44 +96,11 @@
     border: 1px solid #e0e6ed;
 }
 
-@media screen and (max-width: 768px) {
-    .about-hero {
-        padding: 35px 20px;
-        margin-bottom: 40px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-hero {
-        padding: 25px 15px;
-        margin-bottom: 30px;
-        border-radius: 16px;
-    }
-}
-
 .about-hero h1 {
     font-size: 2.8rem;
     color: var(--sec-text-color);
     margin-bottom: 15px;
     font-weight: 700;
-}
-
-@media screen and (max-width: 1024px) {
-    .about-hero h1 {
-        font-size: 2.4rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .about-hero h1 {
-        font-size: 2rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-hero h1 {
-        font-size: 1.8rem;
-    }
 }
 
 .about-tagline {
@@ -216,35 +111,10 @@
     line-height: 1.6;
 }
 
-@media screen and (max-width: 768px) {
-    .about-tagline {
-        font-size: 1.1rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-tagline {
-        font-size: 1rem;
-    }
-}
-
 /* About Sections */
 .about-section {
     margin-bottom: 60px;
-    padding: 0 10px;
-}
-
-@media screen and (max-width: 768px) {
-    .about-section {
-        margin-bottom: 50px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-section {
-        margin-bottom: 40px;
-        padding: 0 5px;
-    }
+    padding: 0;
 }
 
 .about-section h2 {
@@ -254,22 +124,6 @@
     position: relative;
     padding-bottom: 15px;
     font-weight: 600;
-}
-
-@media screen and (max-width: 768px) {
-    .about-section h2 {
-        font-size: 1.6rem;
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-section h2 {
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-    }
 }
 
 .about-section h2::after {
@@ -283,40 +137,12 @@
     border-radius: 2px;
 }
 
-@media screen and (max-width: 768px) {
-    .about-section h2::after {
-        width: 70px;
-        height: 3px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-section h2::after {
-        width: 60px;
-        height: 3px;
-    }
-}
-
 .about-section p {
     color: var(--secondary-color);
     line-height: 1.8;
     font-size: 1.1rem;
     margin: 0 0 20px 0;
     max-width: 900px;
-}
-
-@media screen and (max-width: 768px) {
-    .about-section p {
-        font-size: 1rem;
-        line-height: 1.7;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about-section p {
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
 }
 
 /* Features Grid */
@@ -327,28 +153,6 @@
     margin-top: 30px;
 }
 
-@media screen and (max-width: 1024px) {
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        margin-top: 25px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .features-grid {
-        gap: 15px;
-        margin-top: 20px;
-    }
-}
-
 .feature-card {
     background: white;
     border: 1px solid #e0e6ed;
@@ -357,19 +161,6 @@
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-@media screen and (max-width: 768px) {
-    .feature-card {
-        padding: 30px 20px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .feature-card {
-        padding: 25px 15px;
-        border-radius: 16px;
-    }
 }
 
 .feature-card:hover {
@@ -384,20 +175,6 @@
     margin-bottom: 20px;
 }
 
-@media screen and (max-width: 768px) {
-    .feature-icon {
-        font-size: 2.8rem;
-        margin-bottom: 15px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .feature-icon {
-        font-size: 2.5rem;
-        margin-bottom: 12px;
-    }
-}
-
 .feature-card h3 {
     font-size: 1.5rem;
     color: var(--sec-text-color);
@@ -405,37 +182,11 @@
     font-weight: 600;
 }
 
-@media screen and (max-width: 768px) {
-    .feature-card h3 {
-        font-size: 1.3rem;
-        margin-bottom: 12px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .feature-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-}
-
 .feature-card p {
     color: var(--secondary-color);
     line-height: 1.6;
     font-size: 1rem;
     margin: 0;
-}
-
-@media screen and (max-width: 768px) {
-    .feature-card p {
-        font-size: 0.95rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .feature-card p {
-        font-size: 0.9rem;
-    }
 }
 
 /* Stats Grid */
@@ -447,21 +198,6 @@
     flex-wrap: wrap;
 }
 
-@media screen and (max-width: 768px) {
-    .stats-grid {
-        flex-direction: column;
-        gap: 15px;
-        margin-top: 25px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .stats-grid {
-        gap: 12px;
-        margin-top: 20px;
-    }
-}
-
 .stat-item {
     text-align: center;
     flex: 1;
@@ -471,20 +207,6 @@
     border: 1px solid #e0e6ed;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-}
-
-@media screen and (max-width: 768px) {
-    .stat-item {
-        padding: 25px 15px;
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .stat-item {
-        padding: 20px 12px;
-        border-radius: 12px;
-    }
 }
 
 .stat-item:hover {
@@ -501,18 +223,6 @@
     margin-bottom: 8px;
 }
 
-@media screen and (max-width: 768px) {
-    .stat-number {
-        font-size: 2.5rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .stat-number {
-        font-size: 2.2rem;
-    }
-}
-
 .stat-label {
     font-size: 1.1rem;
     color: var(--secondary-color);
@@ -521,39 +231,12 @@
     font-weight: 500;
 }
 
-@media screen and (max-width: 768px) {
-    .stat-label {
-        font-size: 1rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .stat-label {
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-    }
-}
-
 /* Trust Features */
 .trust-features {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin-top: 30px;
-}
-
-@media screen and (max-width: 768px) {
-    .trust-features {
-        gap: 15px;
-        margin-top: 25px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .trust-features {
-        gap: 12px;
-        margin-top: 20px;
-    }
 }
 
 .trust-feature {
@@ -567,52 +250,16 @@
     transition: all 0.3s ease;
 }
 
-@media screen and (max-width: 768px) {
-    .trust-feature {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-        padding: 30px 20px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .trust-feature {
-        padding: 25px 15px;
-        gap: 12px;
-        border-radius: 12px;
-    }
-}
-
 .trust-feature:hover {
     transform: translateX(10px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     background: white;
 }
 
-@media screen and (max-width: 768px) {
-    .trust-feature:hover {
-        transform: translateY(-5px);
-    }
-}
-
 .trust-icon {
     font-size: 2.8rem;
     min-width: 70px;
     text-align: center;
-}
-
-@media screen and (max-width: 768px) {
-    .trust-icon {
-        font-size: 2.5rem;
-        min-width: auto;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .trust-icon {
-        font-size: 2.2rem;
-    }
 }
 
 .trust-icon.verified {
@@ -634,36 +281,11 @@
     font-weight: 600;
 }
 
-@media screen and (max-width: 768px) {
-    .trust-feature h3 {
-        font-size: 1.3rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .trust-feature h3 {
-        font-size: 1.2rem;
-        margin-bottom: 5px;
-    }
-}
-
 .trust-feature p {
     color: var(--secondary-color);
     font-size: 1rem;
     line-height: 1.6;
     margin: 0;
-}
-
-@media screen and (max-width: 768px) {
-    .trust-feature p {
-        font-size: 0.95rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .trust-feature p {
-        font-size: 0.9rem;
-    }
 }
 
 /* Contact Section */
@@ -674,21 +296,6 @@
     text-align: center;
     border: 1px solid #e0e6ed;
     margin-bottom: 30px;
-}
-
-@media screen and (max-width: 768px) {
-    .contact-section {
-        padding: 35px 20px;
-        border-radius: 20px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .contact-section {
-        padding: 30px 15px;
-        border-radius: 16px;
-        margin-bottom: 20px;
-    }
 }
 
 .contact-section h2::after {
@@ -706,20 +313,6 @@
     margin-right: auto;
 }
 
-@media screen and (max-width: 768px) {
-    .contact-info {
-        margin-top: 25px;
-        gap: 12px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .contact-info {
-        margin-top: 20px;
-        gap: 10px;
-    }
-}
-
 .contact-info p {
     font-size: 1.1rem;
     color: var(--sec-text-color);
@@ -729,21 +322,6 @@
     border-radius: 12px;
     border: 1px solid #e0e6ed;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-@media screen and (max-width: 768px) {
-    .contact-info p {
-        font-size: 1rem;
-        padding: 12px 18px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .contact-info p {
-        font-size: 0.95rem;
-        padding: 10px 15px;
-        border-radius: 10px;
-    }
 }
 
 /* Footer */
@@ -758,20 +336,171 @@
     font-size: 0.9rem;
 }
 
+/* Responsive */
+@media screen and (max-width: 1400px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .about-hero h1 {
+        font-size: 2.4rem;
+    }
+}
+
 @media screen and (max-width: 768px) {
+    .about-page .review-card {
+        padding: 24px;
+    }
+
+    .brand-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .brand-title {
+        font-size: 1.7rem;
+    }
+
+    .brand-title span {
+        font-size: 0.9rem;
+        padding: 3px 8px;
+    }
+
+    .tagline {
+        font-size: 0.85rem;
+        padding: 5px 14px;
+    }
+
+    .about-hero {
+        padding: 35px 20px;
+    }
+
+    .about-hero h1 {
+        font-size: 2rem;
+    }
+
+    .about-tagline {
+        font-size: 1.1rem;
+    }
+
+    .about-section h2 {
+        font-size: 1.6rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        flex-direction: column;
+    }
+
+    .trust-feature {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .trust-feature:hover {
+        transform: translateY(-5px);
+    }
+
+    .contact-section {
+        padding: 35px 20px;
+    }
+
     .copyright-footer {
         flex-direction: column;
         gap: 10px;
         text-align: center;
-        margin-top: 30px;
-        padding-top: 20px;
     }
 }
 
 @media screen and (max-width: 480px) {
+    .about-page .review-card {
+        padding: 18px;
+    }
+
+    .brand-title {
+        font-size: 1.5rem;
+    }
+
+    .brand-title span {
+        font-size: 0.8rem;
+        padding: 3px 7px;
+        margin-left: 5px;
+    }
+
+    .tagline {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+    }
+
+    .about-hero {
+        padding: 25px 15px;
+    }
+
+    .about-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .about-tagline {
+        font-size: 1rem;
+    }
+
+    .about-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .about-section p {
+        font-size: 0.95rem;
+    }
+
+    .feature-card {
+        padding: 25px 15px;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .stat-number {
+        font-size: 2.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .trust-feature {
+        padding: 25px 15px;
+    }
+
+    .trust-icon {
+        font-size: 2.2rem;
+    }
+
+    .trust-feature h3 {
+        font-size: 1.2rem;
+    }
+
+    .contact-section {
+        padding: 30px 15px;
+    }
+
+    .contact-info p {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
+
     .copyright-footer {
-        margin-top: 25px;
-        padding-top: 18px;
         font-size: 0.8rem;
     }
 }

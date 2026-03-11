@@ -184,9 +184,6 @@ const Profile = () => {
       <div className="review-card">
         <div>
           <div className="brand-header">
-            <div className="brand-title">
-              ReviewIt <span>Trust</span>
-            </div>
             <div className="tagline">
               <i className="clipboard-check">My Profile</i>
             </div>

@@ -20,7 +20,9 @@ const About = () => {
   return (
     <div className="about-page">
       <div className="review-card">
-        <div>
+        <div className="about-content">
+          {" "}
+          {/* ← ADD THIS WRAPPER */}
           <div className="brand-header">
             <div className="brand-title">
               ReviewIt <span>Trust</span>
@@ -29,11 +31,9 @@ const About = () => {
               <i className="clipboard-check">About Us</i>
             </div>
           </div>
-
           <button className="back-button" onClick={handleBack}>
             <FaArrowLeft /> Back
           </button>
-
           {/* Hero Section */}
           <div className="about-hero">
             <h1>About ReviewIt</h1>
@@ -41,7 +41,6 @@ const About = () => {
               Making informed decisions through authentic reviews
             </p>
           </div>
-
           {/* Mission Section */}
           <div className="about-section">
             <h2>Our Mission</h2>
@@ -52,7 +51,6 @@ const About = () => {
               their customers.
             </p>
           </div>
-
           {/* How It Works */}
           <div className="about-section">
             <h2>How It Works</h2>
@@ -74,7 +72,6 @@ const About = () => {
               </div>
             </div>
           </div>
-
           {/* Stats Section */}
           <div className="about-section">
             <h2>Our Impact</h2>
@@ -93,7 +90,6 @@ const About = () => {
               </div>
             </div>
           </div>
-
           {/* Trust Section */}
           <div className="about-section">
             <h2>Why Trust Us</h2>
@@ -121,19 +117,18 @@ const About = () => {
               </div>
             </div>
           </div>
-
           {/* Contact Section */}
           <div className="about-section contact-section">
             <h2>Get in Touch</h2>
             <p>Have questions or suggestions? We'd love to hear from you.</p>
             <div className="contact-info">
               <p>Email: support@reviewit.com</p>
-              <p>Phone: +237 68075267</p>
-              <p>Location: cameroon</p>
+              <p>Phone: +233 (0) 123 456 789</p>
+              <p>Location: Accra, Ghana</p>
             </div>
           </div>
-        </div>
-
+        </div>{" "}
+        {/* ← CLOSE ABOUT-CONTENT */}
         <div className="copyright-footer">
           <div>About us</div>
           <div>© 2026 ReviewIT. All rights reserved.</div>

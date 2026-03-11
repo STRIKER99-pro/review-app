@@ -4,7 +4,7 @@ import { supabase } from "./Backend/SupabaseClient";
 import "./App.css";
 
 import HomePage from "./pages/HomePage/HomePage";
-import DashBoard from "./pages/DashBoard/DashBoard";
+import NavBar from "./pages/NavBar/NavBar";
 import Signup from "./pages/SignUpPage/Signup";
 import SearchVendor from "./pages/SearchVendor/SearchVendor";
 import CreateVendor from "./pages/NewVendor/CreateVendor";
@@ -80,7 +80,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DashBoard />}>
+        <Route path="/" element={<NavBar />}>
           <Route index element={<HomePage />} />
           <Route path="SearchVendor" element={<SearchVendor />} />
           <Route path="Categories" element={<Categories />} />
@@ -107,7 +107,7 @@ function App() {
             }
           />
           <Route
-            path="MyReviews" // ← FIXED: Added the missing "e"
+            path="MyReviews" 
             element={
               <ProtectedRoute>
                 <MyReviews />

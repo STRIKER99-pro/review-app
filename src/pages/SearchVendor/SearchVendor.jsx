@@ -143,7 +143,7 @@ const SearchVendor = () => {
     }
   };
 
-  // NEW: Handle category click to show vendors in that category
+  // Handle category click to show vendors in that category
   const handleCategoryClick = async (category) => {
     setSelectedCategory(category);
     setSearchContent(true);
@@ -164,7 +164,7 @@ const SearchVendor = () => {
     }
   };
 
-  // NEW: Handle back to categories
+  // Handle back to categories
   const handleBackToCategories = () => {
     setSelectedCategory(null);
     setCategoryVendors([]);
@@ -360,9 +360,6 @@ const SearchVendor = () => {
     <div className="review-card">
       <div>
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>
@@ -381,11 +378,11 @@ const SearchVendor = () => {
 
             <input
               ref={inputRef}
-              type={searchType === "vendor" ? "number" : "text"}
+              type={searchType === "vendor" ? "text" : "text"}
               className="search-vendor"
               placeholder={
                 searchType === "vendor"
-                  ? "Enter WhatsApp number"
+                  ? "Enter business name"
                   : "Enter product type"
               }
               value={searchQuery}
@@ -393,14 +390,6 @@ const SearchVendor = () => {
               onKeyDown={handleKeyDown}
               autoFocus
             />
-
-            <button type="submit" className="action-btn">
-              {searchType === "vendor" ? (
-                <FaUserPlus />
-              ) : (
-                <FaSearch className="search-icon" />
-              )}
-            </button>
           </div>
 
           {showDropDown && (
@@ -412,7 +401,7 @@ const SearchVendor = () => {
                   setShowDropDown(false);
                 }}
               >
-                <FaWhatsapp /> Search by Number
+                <FaWhatsapp /> Search business name
               </button>
               <button
                 type="button"
@@ -421,7 +410,7 @@ const SearchVendor = () => {
                   setShowDropDown(false);
                 }}
               >
-                <MdCategory /> search By Item
+                <MdCategory /> search by Category
               </button>
             </div>
           )}
@@ -434,7 +423,7 @@ const SearchVendor = () => {
               ← Back to Categories
             </button>
             <h2 className="selected-category-title">
-              <MdCategory className="category-icon" /> {selectedCategory.name}
+              <tegory className="category-icon" /> {selectedCategory.name}
             </h2>
             <p className="vendor-count">
               {categoryVendors.length} vendor
@@ -449,52 +438,73 @@ const SearchVendor = () => {
             <div className="results-header">
               <span className="results-count">
                 {filteredResults.length}
-                {searchType === "vendor" ? " vendors " : " categories"}
+                {searchType === "vendor" ? " vendors" : " categories"}
                 Found
               </span>
             </div>
-            {filteredResults.map((item, index) => (
-              <div
-                key={item.id}
-                className={`result-item ${index === selectedIndex ? "selected" : ""}`}
-                onClick={() => handleItemClick(item)}
-                onMouseEnter={() => setSelectedIndex(index)}
-              >
-                {searchType === "vendor" ? (
-                  <>
-                    <div className="contact-icon">
-                      <FaWhatsapp />
-                    </div>
-                    <div className="result-info">
-                      <div className="result-primary">
-                        <span className="result-phone">{item.phoneNumber}</span>
-                        <span className="result-name">{item.name}</span>
+
+            {searchType === "vendor" ? (
+              <div className="vendors-grid">
+                {filteredResults.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`vendor-card ${index === selectedIndex ? "selected" : ""}`}
+                    onClick={() => handleItemClick(item)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  >
+                    <div className="vendor-header">
+                      <div className="vendor-icon">
+                        <FaWhatsapp />
                       </div>
-                      <div className="result-rating">
-                        {renderStars(item.rating)}
-                        <span className="result-reviews">
-                          ({item.reviews} reviews)
-                        </span>
+                      <div className="vendor-details">
+                        <div className="vendor-name">{item.name} </div>
+                        <div className="vendor-phone">
+                          {/* <FaWhatsapp className="whatsapp-icon" /> */}
+                          {/* {item.phoneNumber} */}
+                        </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="contact-icon">
-                      <MdCategory />
-                    </div>
-                    <div className="result-info">
-                      <div className="result-primary">
-                        <span className="result-name">{item.name}</span>
+
+                    {item.category && (
+                      <div className="vendor-category">{item.category}</div>
+                    )}
+
+                    <div className="vendor-footer">
+                      <div className="vendor-stars">
+                        <div className="stars">{renderStars(item.rating)}</div>
+                        <span className="review-count">({item.reviews})</span>
                       </div>
-                      <div className="result-rating">
-                        {renderStars(item.rating)}
-                      </div>
+                      <span className="review-badge">
+                        {item.rating > 0 ? item.rating.toFixed(1) : "New"}
+                      </span>
                     </div>
-                  </>
-                )}
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="categories-grid">
+                {filteredResults.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`category-card ${index === selectedIndex ? "selected" : ""}`}
+                    onClick={() => handleItemClick(item)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  >
+                    <div className="category-icon-large">
+                      <ategory className="contact-icon" />
+                    </div>
+                    <div className="category-title">{item.name}</div>
+                    <div className="category-vendor-count">
+                      {
+                        vendorNumbers.filter((v) => v.category === item.name)
+                          .length
+                      }{" "}
+                      vendors
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -508,7 +518,7 @@ const SearchVendor = () => {
                   <div className="model-content">
                     <h3>Vendor Not Found</h3>
                     <p>
-                      No vendor found with number:{" "}
+                      No vendor found with the business name :{" "}
                       <strong>{selectedVendor?.phoneNumber}</strong>
                     </p>
                     <p>would you like to create a new vendor profile?</p>
@@ -535,72 +545,102 @@ const SearchVendor = () => {
         {!searchContent && !selectedCategory && (
           <div className="review-search">
             {searchType === "vendor" ? (
-              <div className="review-contact-container">
+              <>
                 <h3 className="section-title">
-                  <FaUserPlus /> Top Vendors
+                  <FaUserPlus className="contact-icon" /> Top Vendors
                 </h3>
                 {vendorNumbers.length > 0 ? (
-                  vendorNumbers.slice(0, 5).map((vendor) => (
-                    <div
-                      key={vendor.id}
-                      className="review-contact clickable"
-                      onClick={() => handleItemClick(vendor)}
-                    >
-                      <div className="review-numbers">
-                        <FaWhatsapp className="contact-icon" />
-                        {vendor.phoneNumber}
+                  <div className="vendors-grid">
+                    {vendorNumbers.slice(0, 6).map((vendor) => (
+                      <div
+                        key={vendor.id}
+                        className="vendor-card"
+                        onClick={() => handleItemClick(vendor)}
+                      >
+                        <div className="vendor-contents">
+                          <div className="vendor-header">
+                            <div className="vendor-icon">
+                              <FaWhatsapp />
+                            </div>
+                            <div className="vendor-details">
+                              <div className="vendor-name">{vendor.name}</div>
+                              {vendor.category && (
+                                <div className="vendor-category">
+                                  {vendor.category}
+                                </div>
+                              )}
+                              <div className="vendor-phone">
+                                {/* <FaWhatsapp className="whatsapp-icon" /> */}
+                                {/* {vendor.phoneNumber} */}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="vendor-footer">
+                          <div className="vendor-stars">
+                            <div className="stars">
+                              {renderStars(vendor.rating)}
+                            </div>
+                            <span className="review-count">
+                              ({vendor.reviews}{" "}
+                              {vendor.reviews === 1 ? "review" : "reviews"})
+                            </span>
+                          </div>
+                          <span className="review-badge">
+                            {vendor.rating > 0
+                              ? vendor.rating.toFixed(1)
+                              : "New"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="vendor-info">
-                        <span className="vendor-name">{vendor.name}</span>
-                        <span className="vendor-reviews">
-                          ({vendor.reviews} reviews)
-                        </span>
-                      </div>
-                      <div className="star-icon">
-                        {renderStars(vendor.rating)}
-                      </div>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 ) : (
                   <div className="no-vendors-message">
                     <p>No vendors found. Create your first vendor!</p>
                   </div>
                 )}
-              </div>
+              </>
             ) : (
-              <div className="categories-list">
+              <>
                 <h3 className="section-title">
-                  <MdCategory /> Shop Categories
+                  <MdCategory className="contact-icon" /> Shop Categories
                 </h3>
                 {categories.length > 0 ? (
-                  categories.map((category) => (
-                    <div
-                      key={category.id}
-                      className="review-contact clickable"
-                      onClick={() => handleCategoryClick(category)}
-                    >
-                      <div className="review-numbers">
-                        <MdCategory className="contact-icon" />
-                        {category.name}
+                  <div className="categories-grid">
+                    {categories.map((category) => (
+                      <div
+                        key={category.id}
+                        className="category-card"
+                        onClick={() => handleCategoryClick(category)}
+                      >
+                        <div className="category-contents">
+                          <div className="category-icon-large">
+                            <MdCategory />
+                            <div className="category-title">
+                              {category.name}
+                            </div>
+                          </div>
+
+                          <div className="category-vendor-count">
+                            {
+                              vendorNumbers.filter(
+                                (v) => v.category === category.name,
+                              ).length
+                            }{" "}
+                            vendors
+                          </div>
+                        </div>
                       </div>
-                      <div className="category-stats">
-                        <span className="vendor-count">
-                          {
-                            vendorNumbers.filter(
-                              (v) => v.category === category.name,
-                            ).length
-                          }{" "}
-                          vendors
-                        </span>
-                      </div>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 ) : (
                   <div className="no-categories-message">
                     <p>No categories found. Create vendors with categories!</p>
                   </div>
                 )}
-              </div>
+              </>
             )}
           </div>
         )}

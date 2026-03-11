@@ -341,24 +341,24 @@
     }
 }
 
-/* When used inside dashboard, adjust for mobile menu toggle */
-.dashboard-main .create-vendor {
+/* When used inside NavBar, adjust for mobile menu toggle */
+.NavBar-main .create-vendor {
     margin-top: 15px;
 }
 
 @media screen and (max-width: 768px) {
-    .dashboard-main .create-vendor {
+    .NavBar-main .create-vendor {
         margin-top: 10px;
     }
 
-    .dashboard-main .create-vendor input {
+    .NavBar-main .create-vendor input {
         width: 95%;
         margin: 5px auto;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .dashboard-main .create-vendor input {
+    .NavBar-main .create-vendor input {
         width: 98%;
         margin: 4px auto;
     }

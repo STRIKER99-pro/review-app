@@ -1,7 +1,7 @@
 /*HOME PAGE BASE STYLES */
 .home-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
     overflow-y: auto;
@@ -364,11 +364,13 @@
     cursor: pointer;
 }
 
-/* ===== LARGE DESKTOP (1280px and above) ===== */
-@media screen and (min-width: 1280px) {
+/*LARGE DESKTOP*/
+@media screen and (min-width: 1600px) {
     .home-container {
-        max-width: 1200px;
-        padding: 30px;
+        max-width: 1600px;
+        padding: 3px;
+        width: 1600px;
+        left: 0;
     }
 
     .hero-section {
@@ -401,7 +403,7 @@
     }
 }
 
-/* ===== DESKTOP (1025px - 1279px) ===== */
+/*DESKTOP*/
 @media screen and (min-width: 1025px) and (max-width: 1279px) {
     .home-container {
         max-width: 1000px;
@@ -426,7 +428,7 @@
     }
 }
 
-/* ===== SMALL DESKTOP / LAPTOP (769px - 1024px) ===== */
+/*SMALL DESKTOP / LAPTOP*/
 @media screen and (min-width: 769px) and (max-width: 1024px) {
     .home-container {
         max-width: 95%;
@@ -481,6 +483,8 @@
     }
 
     .vendor-card {
+        display: flex;
+        justify-content: space-between;
         padding: 15px 20px;
     }
 
@@ -598,6 +602,9 @@
 
     .vendor-card {
         padding: 15px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
     }
 
     .vendor-name {
@@ -757,7 +764,7 @@
     }
 
     .vendor-card {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 10px;
         padding: 12px 15px;

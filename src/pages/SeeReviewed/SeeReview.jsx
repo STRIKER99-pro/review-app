@@ -125,9 +125,6 @@ const SeeReview = () => {
     return (
       <div className="review-card">
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>
@@ -144,9 +141,6 @@ const SeeReview = () => {
     return (
       <div className="review-card">
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>
@@ -168,9 +162,6 @@ const SeeReview = () => {
       <div>
         {/* Header */}
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>
@@ -183,8 +174,8 @@ const SeeReview = () => {
               <span className="review-value">{vendor.name}</span>
             </div>
             <div className="review-item">
-              <span className="review-label">Tel:</span>
-              <span className="review-value">{vendor.phoneNumber}</span>
+              {/* <span className="review-label">Tel:</span> */}
+              {/* <span className="review-value">{vendor.phoneNumber}</span> */}
             </div>
             <div className="review-item">
               <span className="review-label">Category:</span>

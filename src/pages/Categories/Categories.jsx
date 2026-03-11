@@ -65,7 +65,7 @@ const Categories = () => {
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
 
-      console.log("Dynamic categories loaded:", categoriesList); // Debug log
+      console.log("Dynamic categories loaded:", categoriesList);
       setCategories(categoriesList);
     } catch (error) {
       console.error("Error loading categories:", error);
@@ -161,8 +161,10 @@ const Categories = () => {
     return (
       <div className="categories-page">
         <div className="review-card">
-          <div style={{ textAlign: "center", padding: "50px" }}>
-            Loading categories...
+          <div className="categories-content">
+            <div style={{ textAlign: "center", padding: "50px" }}>
+              Loading categories...
+            </div>
           </div>
         </div>
       </div>
@@ -172,11 +174,8 @@ const Categories = () => {
   return (
     <div className="categories-page">
       <div className="review-card">
-        <div>
+        <div className="categories-content">
           <div className="brand-header">
-            <div className="brand-title">
-              ReviewIt <span>Trust</span>
-            </div>
             <div className="tagline">
               <i className="fa fa-clipboard-check">Browse by Category</i>
             </div>

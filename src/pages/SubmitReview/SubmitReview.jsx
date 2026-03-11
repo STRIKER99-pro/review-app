@@ -210,9 +210,6 @@ const SubmitReview = () => {
     return (
       <div className="review-card">
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="fa fa-clipboard-check">Check before you buy</i>
           </div>

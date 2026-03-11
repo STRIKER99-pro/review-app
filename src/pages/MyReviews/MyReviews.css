@@ -124,7 +124,7 @@
     margin: 0;
 }
 
-.vendor-info-header .vendor-category {
+.vendor-info-header {
     color: var(--secondary-color);
     font-size: 0.85rem;
     background: #eef1f6;
