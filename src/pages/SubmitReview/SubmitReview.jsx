@@ -87,6 +87,51 @@ const SubmitReview = () => {
     return stars;
   };
 
+  // Update vendor's average rating - MOVED OUTSIDE handleSubmit
+  const updateVendorRating = async (vendorId) => {
+    try {
+      console.log("Updating rating for vendor:", vendorId);
+
+      // Get all reviews for this vendor
+      const { data: reviews, error: fetchError } = await supabase
+        .from("reviews")
+        .select("rating")
+        .eq("vendor_id", vendorId);
+
+      if (fetchError) {
+        console.error("Fetch error:", fetchError);
+        throw fetchError;
+      }
+
+      console.log("Reviews found:", reviews);
+
+      // Calculate new average
+      const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+      const average = total / reviews.length;
+
+      console.log("Average rating:", average, "Total reviews:", reviews.length);
+
+      // Update vendor with new average and review count
+      const { error: updateError } = await supabase
+        .from("vendors")
+        .update({
+          rating: average,
+          reviews_count: reviews.length,
+        })
+        .eq("id", vendorId);
+
+      if (updateError) {
+        console.error("Update error:", updateError);
+        throw updateError;
+      }
+
+      console.log("Vendor rating updated successfully");
+    } catch (error) {
+      console.error("Error updating vendor rating:", error);
+      throw error;
+    }
+  };
+
   // handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -138,13 +183,23 @@ const SubmitReview = () => {
       console.log("New review:", newReview);
 
       // Insert review into Supabase
-      const { error: insertError } = await supabase
+      console.log("Attempting to insert review:", newReview);
+      const { error: insertError, data: insertData } = await supabase
         .from("reviews")
-        .insert([newReview]);
+        .insert([newReview])
+        .select();
 
-      if (insertError) throw insertError;
+      console.log("Insert result:", { insertError, insertData });
+
+      if (insertError) {
+        console.error("Insert error details:", insertError);
+        throw insertError;
+      }
+
+      console.log("Review inserted successfully");
 
       // Update vendor's average rating
+      console.log("Updating vendor rating for vendor:", vendor.id);
       await updateVendorRating(vendor.id);
 
       toast.success("Review submitted successfully!");
@@ -162,36 +217,6 @@ const SubmitReview = () => {
       );
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Update vendor's average rating
-  const updateVendorRating = async (vendorId) => {
-    try {
-      // Get all reviews for this vendor
-      const { data: reviews, error: fetchError } = await supabase
-        .from("reviews")
-        .select("rating")
-        .eq("vendor_id", vendorId);
-
-      if (fetchError) throw fetchError;
-
-      // Calculate new average
-      const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-      const average = total / reviews.length;
-
-      // Update vendor with new average and review count
-      const { error: updateError } = await supabase
-        .from("vendors")
-        .update({
-          rating: average,
-          reviews_count: reviews.length,
-        })
-        .eq("id", vendorId);
-
-      if (updateError) throw updateError;
-    } catch (error) {
-      console.error("Error updating vendor rating:", error);
     }
   };
 
@@ -229,9 +254,6 @@ const SubmitReview = () => {
       <div>
         {/* Header */}
         <div className="brand-header">
-          <div className="brand-title">
-            ReviewIt <span>Trust</span>
-          </div>
           <div className="tagline">
             <i className="clipboard-check">Check before you buy</i>
           </div>
@@ -322,5 +344,3 @@ const SubmitReview = () => {
 };
 
 export default SubmitReview;
-
-

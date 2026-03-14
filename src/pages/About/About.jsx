@@ -24,9 +24,6 @@ const About = () => {
           {" "}
           {/* ← ADD THIS WRAPPER */}
           <div className="brand-header">
-            <div className="brand-title">
-              ReviewIt <span>Trust</span>
-            </div>
             <div className="tagline">
               <i className="clipboard-check">About Us</i>
             </div>

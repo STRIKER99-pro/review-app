@@ -1,4 +1,4 @@
-*/ * {
+* {
   margin: 0;
   padding: 0;
   font-family: roboto, sans-serif;
@@ -46,26 +46,10 @@ body {
   align-items: flex-start;
 }
 
-.home-container,
-.categories-page,
-.profile-page,
-.about-page,
-.my-reviews-page,
-.create-vendor-page,
-.submit-review-page,
-.search-vendor-page,
-.see-review-page {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #f5f7fb;
-}
 
-/* Card Container - Used by all pages */
+/* Card Container, Used by all pages */
 .review-card {
-  max-width: 1400px;
+  /* max-width: 1400px !important; */
   width: 1400px;
   height: 100%;
   background-color: var(--bg-color);
@@ -83,7 +67,7 @@ body {
   overflow: hidden;
 }
 
-/* Header - Used by all pages */
+/* Header, Used by all pages */
 .brand-header {
   display: flex;
   flex-wrap: wrap;

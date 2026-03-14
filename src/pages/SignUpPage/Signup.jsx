@@ -132,7 +132,6 @@ const Signup = () => {
           },
         ]);
       } else {
-        // For phone signup
         // Create new user with metadata
         const displayName = username || `User${phoneNumber.slice(-4)}`;
 
@@ -149,9 +148,6 @@ const Signup = () => {
 
         if (error) throw error;
         userId = data.user.id;
-
-        // Profile will be created by database trigger
-        // No need for manual insert
       }
 
       // Clear any existing guest session

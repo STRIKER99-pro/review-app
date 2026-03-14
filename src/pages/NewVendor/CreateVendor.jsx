@@ -11,6 +11,7 @@ const CreateVendor = () => {
     businessName: "",
     phoneNumber: "",
     category: "",
+    location: "",
   });
 
   const [submit, setSubmit] = useState(false);
@@ -81,6 +82,8 @@ const CreateVendor = () => {
         return "";
       case "category":
         return !value.trim() ? "Category is required" : "";
+      case "location":
+        return !value.trim() ? "Location is required" : "";
       default:
         return "";
     }
@@ -132,6 +135,7 @@ const CreateVendor = () => {
           business_name: formData.businessName,
           phone_number: formData.phoneNumber,
           category: formData.category,
+          location: formData.location,
           user_id: user.id,
           rating: 0,
           reviews_count: 0,
@@ -146,6 +150,7 @@ const CreateVendor = () => {
         businessName: "",
         phoneNumber: "",
         category: "",
+        location: "",
       });
 
       // Redirect after success
@@ -244,6 +249,22 @@ const CreateVendor = () => {
               />
               {error.category && (
                 <div className="field-error-message">{error.category}</div>
+              )}
+            </div>
+
+            <div className="form-field">
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="What is your Location e.g Douala, Cameroon"
+                disabled={submit}
+                className={error.location ? "input-error" : ""}
+              />
+              {error.location && (
+                <div className="field-error-message">{error.location}</div>
               )}
             </div>
 

@@ -31,28 +31,43 @@ const HomePage = () => {
   const fetchVendors = async () => {
     try {
       setLoading(true);
+      console.log("Fetching vendors from Supabase...");
 
       // Fetch all vendors from Supabase
       const { data: vendorsData, error: vendorsError } = await supabase
         .from("vendors")
         .select("*");
 
-      if (vendorsError) throw vendorsError;
+      if (vendorsError) {
+        console.error("Supabase error:", vendorsError);
+        throw vendorsError;
+      }
+
+      console.log("Vendors data received:", vendorsData);
 
       // If no vendors in database, use default vendors
       let allVendors = [];
 
       if (vendorsData && vendorsData.length > 0) {
+        console.log(`Processing ${vendorsData.length} vendors...`);
+
         // Get reviews for each vendor
         const vendorsWithReviews = await Promise.all(
           vendorsData.map(async (vendor) => {
+            console.log("Processing vendor:", vendor.id);
+
             // Fetch reviews for this vendor
             const { data: reviewsData, error: reviewsError } = await supabase
               .from("reviews")
               .select("rating")
               .eq("vendor_id", vendor.id);
 
-            if (reviewsError) throw reviewsError;
+            if (reviewsError) {
+              console.error("Reviews error:", reviewsError);
+              throw reviewsError;
+            }
+
+            console.log(`Reviews for vendor ${vendor.id}:`, reviewsData);
 
             // Calculate average rating
             const reviewCount = reviewsData?.length || 0;
@@ -77,7 +92,9 @@ const HomePage = () => {
         );
 
         allVendors = vendorsWithReviews;
+        console.log("Formatted vendors:", allVendors);
       } else {
+        console.log("No vendors found, using default vendors");
         // Default vendors if database is empty
         allVendors = [
           {
@@ -104,6 +121,7 @@ const HomePage = () => {
         ];
       }
 
+      console.log("Setting vendors state with:", allVendors);
       setVendors(allVendors);
 
       // Calculate stats
@@ -122,6 +140,11 @@ const HomePage = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("vendors state updated:", vendors);
+    console.log("vendors length:", vendors.length);
+  }, [vendors]);
+  
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);

@@ -1,17 +1,30 @@
 /* Make the page take full viewport */
+.about-page,
+.about-page .review-card,
+.about-page .about-content {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    overflow-y: auto !important;
+}
+
 .about-page {
     width: 100%;
     min-height: 100vh;
     background-color: #f5f7fb;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: hidden !important;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
 }
 
-/* Make the review card take full width and height */
-.about-page .review-card {
+.about-page .review-ca {
     width: 100%;
-    flex: 1;
+    min-height: 100vh;
     background-color: var(--bg-color);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     padding: 32px 48px;
@@ -19,15 +32,19 @@
     flex-direction: column;
     margin: 0;
     border-radius: 0;
+    overflow-y: auto !important;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
-/* Content container to control inner width while keeping background full */
+
 .about-content {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
     flex: 1;
 }
+
 
 .brand-header {
     display: flex;
@@ -504,3 +521,5 @@
         font-size: 0.8rem;
     }
 }
+
+

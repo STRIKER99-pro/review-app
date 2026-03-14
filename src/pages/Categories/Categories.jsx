@@ -54,6 +54,7 @@ const Categories = () => {
           phoneNumber: vendor.phone_number,
           category: vendor.category,
           name: vendor.business_name,
+          location: vendor.location,
         });
       });
 
@@ -77,19 +78,19 @@ const Categories = () => {
   // Helper function to assign icons based on category name
   const getCategoryIcon = (categoryName) => {
     const name = categoryName.toLowerCase();
-    if (name.includes("fashion") || name.includes("clothing")) return "👗";
-    if (name.includes("jewel") || name.includes("accessory")) return "💍";
-    if (name.includes("watch")) return "⌚";
-    if (name.includes("handbag") || name.includes("bag")) return "👜";
-    if (name.includes("baby")) return "👶";
-    if (name.includes("kid")) return "🧒";
-    if (name.includes("sport") || name.includes("fitness")) return "🏃";
-    if (name.includes("phone") || name.includes("electronics")) return "📱";
-    if (name.includes("shirt") || name.includes("tshirt")) return "👕";
-    if (name.includes("shoe") || name.includes("footwear")) return "👟";
-    if (name.includes("food") || name.includes("restaurant")) return "🍔";
-    if (name.includes("beauty") || name.includes("cosmetic")) return "💄";
-    if (name.includes("furniture") || name.includes("home")) return "🪑";
+    if (name.includes("fashion") || name.includes("clothing")) return "";
+    if (name.includes("jewel") || name.includes("accessory")) return "";
+    if (name.includes("watch")) return "";
+    if (name.includes("handbag") || name.includes("bag")) return "";
+    if (name.includes("baby")) return "";
+    if (name.includes("kid")) return "";
+    if (name.includes("sport") || name.includes("fitness")) return "";
+    if (name.includes("phone") || name.includes("electronics")) return "";
+    if (name.includes("shirt") || name.includes("tshirt")) return "";
+    if (name.includes("shoe") || name.includes("footwear")) return "";
+    if (name.includes("food") || name.includes("restaurant")) return "";
+    if (name.includes("beauty") || name.includes("cosmetic")) return "";
+    if (name.includes("furniture") || name.includes("home")) return "";
     return "🏪";
   };
 

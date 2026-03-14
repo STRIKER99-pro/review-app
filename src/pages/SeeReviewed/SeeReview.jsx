@@ -34,12 +34,20 @@ const SeeReview = () => {
     const loadReviews = async () => {
       try {
         // Fetch reviews for this vendor from Supabase
+        // Add this right at the beginning of loadReviews
+        console.log("Attempting to fetch from Supabase...");
+        console.log("Supabase URL:", supabase.supabaseUrl);
+        console.log("Vendor ID:", vendorData.id);
+
         const { data: reviewsData, error: reviewsError } = await supabase
           .from("reviews")
           .select("*")
           .eq("vendor_id", vendorData.id)
           .order("created_at", { ascending: false });
 
+        console.log("Raw Supabase response:", { reviewsData, reviewsError });
+
+        
         if (reviewsError) throw reviewsError;
 
         // Format reviews to match your component's expected structure

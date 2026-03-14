@@ -1,37 +1,45 @@
-/* Make the page take full viewport */
+.categories-page .review-card,
+.categories-page .categories-content {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 .categories-page {
-    width: 100%;
+    width: 100vw;
     min-height: 100vh;
     background-color: #f5f7fb;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
 }
 
-/* Make the review card take full width and height */
 .categories-page .review-card {
     width: 100%;
-    flex: 1;
+    min-height: 100vh;
     background-color: var(--bg-color);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     padding: 32px 24px;
-    /* Reduced horizontal padding */
     display: flex;
     flex-direction: column;
     margin: 0;
     border-radius: 0;
+    overflow-y: auto;
 }
 
-/* Content container - now stretches full width */
+/* Content container - full width with centered content */
 .categories-content {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     flex: 1;
     padding: 0 20px;
-    /* Add padding for breathing room */
 }
 
-/* Make grid responsive to fill available space */
+/* Make grid responsive */
 .categories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -40,7 +48,6 @@
     width: 100%;
 }
 
-/* Rest of your styles remain the same */
 .categories-title {
     font-size: 1.8rem;
     color: var(--sec-text-color);
@@ -52,7 +59,7 @@
     background: white;
     border: 1px solid #e0e6ed;
     border-radius: 16px;
-    padding: 25px 15px;
+    /* padding: 25px 15px; */
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
@@ -84,7 +91,6 @@
     font-size: 0.9rem;
 }
 
-/* No Categories */
 .no-categories {
     text-align: center;
     padding: 60px 20px;
@@ -265,6 +271,13 @@
 }
 
 /* Responsive */
+
+@media screen and (max-width: 1600px){
+    .categories-page{
+        width: 100% !important;
+    }
+}
+
 @media screen and (max-width: 968px) {
     .categories-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -329,3 +342,5 @@
         text-align: center;
     }
 }
+
+

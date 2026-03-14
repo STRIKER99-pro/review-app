@@ -40,60 +40,58 @@ const SearchVendor = () => {
   }, []);
 
   // Function to fetch vendors from Supabase
-  const fetchVendors = async () => {
-    try {
-      // Fetch vendors from Supabase
-      const { data: vendorsData, error: vendorsError } = await supabase
-        .from("vendors")
-        .select("*");
+ const fetchVendors = async () => {
+   try {
+     console.log("Fetching vendors...");
+     const { data: vendorsData, error: vendorsError } = await supabase
+       .from("vendors")
+       .select("*");
 
-      if (vendorsError) throw vendorsError;
+     if (vendorsError) throw vendorsError;
 
-      // If there are vendors in Supabase, format them
-      if (vendorsData && vendorsData.length > 0) {
-        const formattedVendors = await Promise.all(
-          vendorsData.map(async (vendor) => {
-            // Fetch reviews for this vendor from Supabase
-            const { data: reviewsData, error: reviewsError } = await supabase
-              .from("reviews")
-              .select("rating")
-              .eq("vendor_id", vendor.id);
+     if (vendorsData && vendorsData.length > 0) {
+       const formattedVendors = await Promise.all(
+         vendorsData.map(async (vendor) => {
+           // Get reviews
+           const { data: reviewsData } = await supabase
+             .from("reviews")
+             .select("rating")
+             .eq("vendor_id", vendor.id);
 
-            if (reviewsError) throw reviewsError;
+           let avgRating = 0;
+           const reviewCount = reviewsData?.length || 0;
+           if (reviewCount > 0) {
+             const total = reviewsData.reduce(
+               (sum, review) => sum + review.rating,
+               0,
+             );
+             avgRating = total / reviewCount;
+           }
 
-            // Calculate average rating
-            let avgRating = 0;
-            const reviewCount = reviewsData?.length || 0;
-            if (reviewCount > 0) {
-              const total = reviewsData.reduce(
-                (sum, review) => sum + review.rating,
-                0,
-              );
-              avgRating = total / reviewCount;
-            }
+           return {
+             id: vendor.id,
+             phoneNumber: vendor.phone_number,
+             name: vendor.business_name,
+             category: vendor.category,
+             location: vendor.location,
+             rating: avgRating,
+             reviews: reviewCount,
+           };
+         }),
+       );
 
-            return {
-              id: vendor.id,
-              phoneNumber: vendor.phone_number,
-              name: vendor.business_name,
-              category: vendor.category,
-              rating: avgRating,
-              reviews: reviewCount,
-            };
-          }),
-        );
-
-        setVendorNumbers(formattedVendors);
-      } else {
-        // No vendors in database - set empty array
-        setVendorNumbers([]);
-      }
-    } catch (error) {
-      console.error("Error fetching vendors:", error);
-      toast.error("Failed to load vendors");
-      setVendorNumbers([]);
-    }
-  };
+       console.log("Formatted vendors:", formattedVendors);
+       setVendorNumbers(formattedVendors);
+     } else {
+       console.log("No vendors found");
+       setVendorNumbers([]);
+     }
+   } catch (error) {
+     console.error("Error fetching vendors:", error);
+     toast.error("Failed to load vendors");
+     setVendorNumbers([]);
+   }
+ };
 
   const [categories, setCategories] = useState([]);
 
@@ -283,6 +281,11 @@ const SearchVendor = () => {
     setSelectedIndex(-1);
   }, [searchQuery, searchType, vendorNumbers, selectedCategory]);
 
+  useEffect(() => {
+    console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+    console.log("Supabase Anon Key:", import.meta.env.VITE_SUPABASE_ANON_KEY);
+  }, []);
+  
   const handleKeyDown = (e) => {
     if (!filteredResults.length) return;
 
@@ -351,7 +354,7 @@ const SearchVendor = () => {
     const value = e.target.value;
     setSearchQuery(value);
     if (selectedCategory) {
-      setSelectedCategory(null); // Clear category selection when searching
+      setSelectedCategory(null);
       setCategoryVendors([]);
     }
   };
@@ -570,8 +573,8 @@ const SearchVendor = () => {
                                 </div>
                               )}
                               <div className="vendor-phone">
-                                {/* <FaWhatsapp className="whatsapp-icon" /> */}
-                                {/* {vendor.phoneNumber} */}
+                                {/* <FaWhatsapp className="whatsapp-icon" />
+                                {vendor.phoneNumber} */}
                               </div>
                             </div>
                           </div>

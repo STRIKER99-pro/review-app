@@ -1,4 +1,36 @@
 
+.create-vendor-page {
+    width: 1000vw !important;
+    min-height: 100vh !important;
+    background-color: #f5f7fb;
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+.create-vendor-page, .review-card {
+    width: 100% !important;
+    min-height: 100vh !important;
+    background-color: var(--bg-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    padding: 32px 24px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Content container to keep content centered */
+.create-vendor-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    padding: 0 2px;
+}
 .create-vendor {
     display: flex;
     flex-direction: column;

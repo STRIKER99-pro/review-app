@@ -178,7 +178,7 @@
     }
 }
 
-/* ===== TABLET (481px - 768px) ===== */
+/* TABLET */
 @media screen and (min-width: 481px) and (max-width: 768px) {
     .submit-content {
         padding: 20px;
@@ -227,7 +227,7 @@
     }
 }
 
-/* ===== MOBILE (0 - 480px) ===== */
+
 @media screen and (max-width: 480px) {
     .submit-content {
         padding: 15px;
@@ -322,20 +322,17 @@
         height: 40px;
         font-size: 0.85rem;
     }
-}
 
-/*ATING DISPLAY ADJUSTMENTS*/
-@media screen and (max-width: 480px) {
     .submit-content .rating-compact {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
     }
-
     .submit-content .rating-compact span {
         font-size: 0.9rem;
     }
 }
+
 
 @media screen and (min-width: 481px) and (max-width: 768px) {
     .submit-content .rating-compact {
